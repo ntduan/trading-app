@@ -18,7 +18,16 @@ export const TVChartContainer = () => {
       library_path: '/charting_library/',
       datafeed: datafeed,
       locale: 'en',
-      disabled_features: ['use_localstorage_for_settings'],
+      disabled_features: [
+        'header_symbol_search',
+        'header_settings',
+        'header_undo_redo',
+        'header_screenshot',
+        'header_fullscreen_button',
+        'volume_force_overlay',
+        'header_compare',
+        'header_saveload',
+      ],
       enabled_features: ['study_templates'],
       theme: 'dark',
       studies_overrides: {},
@@ -32,7 +41,14 @@ export const TVChartContainer = () => {
 
   return (
     <>
-      <Script src="/charting_library.js" strategy="lazyOnload" onLoad={() => {}} />
+      {/* <Script
+        src="/charting_library.js"
+        strategy="lazyOnload"
+        onLoad={() => {
+          console.log('TradingView charting library loaded');
+          // console.log((TradingView as any).widget);
+        }}
+      /> */}
       <div ref={chartContainerRef} className={'TVChartContainer'} />
     </>
   );
