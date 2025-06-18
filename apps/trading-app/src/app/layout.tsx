@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 
 import { ReactQueryProvider } from '@/components/providers/react-query-provider';
 import './globals.css';
+import { Updater } from '@/state/updater';
 
 const interSans = Inter({
   variable: '--font-inter-sans',
@@ -22,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${interSans.variable} antialiased`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          <Updater />
+          {children}
+        </ReactQueryProvider>
       </body>
     </html>
   );

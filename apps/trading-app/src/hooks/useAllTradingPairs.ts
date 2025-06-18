@@ -17,8 +17,11 @@ const fetchTradingPairs = async (): Promise<TradingPair[]> => {
 export const useAllTradingPairs = () => {
   return useQuery({
     queryKey: ['trading-pairs'],
+    staleTime: Infinity,
+    gcTime: Infinity,
     queryFn: fetchTradingPairs,
-    staleTime: 1000 * 60 * 5, // 5 minutes
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 };

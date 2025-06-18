@@ -2,7 +2,7 @@
 import * as nextServer from 'next/server';
 import { describe, it, expect, vi } from 'vitest';
 
-import { GET } from './pairs';
+import { GET } from './route';
 
 describe('GET /api/pairs', () => {
   it('should return trading pairs as JSON response', async () => {
@@ -15,8 +15,8 @@ describe('GET /api/pairs', () => {
     // Assert
     expect(jsonSpy).toHaveBeenCalled();
     const [responseData] = jsonSpy.mock.calls[0] as any[];
-    expect(Array.isArray(responseData)).toBe(true);
-    expect(responseData.length).toBeGreaterThan(0);
+    expect(Array.isArray(responseData.result)).toBe(true);
+    expect(responseData.result.length).toBeGreaterThan(0);
 
     // Cleanup
     jsonSpy.mockRestore();
@@ -31,9 +31,9 @@ describe('GET /api/pairs', () => {
 
     // Assert
 
-    const [pairs] = jsonSpy.mock.calls[0] as any[];
+    const [result] = jsonSpy.mock.calls[0] as any[];
 
-    pairs.forEach((pair: any) => {
+    result.result.forEach((pair: any) => {
       expect(pair).toHaveProperty('symbol');
       expect(pair).toHaveProperty('baseAsset');
       expect(pair).toHaveProperty('quoteAsset');

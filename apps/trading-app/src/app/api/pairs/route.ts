@@ -8,5 +8,7 @@ const pairs = [
 ];
 
 export async function GET() {
-  return NextResponse.json(pairs);
+  return NextResponse.json({
+    result: pairs,
+  });
 }
