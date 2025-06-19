@@ -4,6 +4,8 @@ import Image from 'next/image';
 
 import Link from 'next/link';
 
+import { useState } from 'react';
+
 import { Card } from '@/components/ui/card';
 import {
   DropdownMenu,
@@ -19,10 +21,11 @@ import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
 export const CoinInfo = () => {
   const { data: activeTradingPair } = useActiveTradingPairInfo();
   const { data: allTradingPairs } = useAllTradingPairs();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Card className="flex flex-row items-center px-4 py-2 h-20 mt-0.5">
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           {activeTradingPair ? (
             <div className="flex items-center gap-2">
@@ -32,7 +35,9 @@ export const CoinInfo = () => {
               <h2 className="text-xl">
                 {activeTradingPair.baseAsset}/{activeTradingPair.quoteAsset}
               </h2>
-              <ChevronDown />
+              <ChevronDown
+                className={`transition-transform duration-200 ease-in-out ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+              />
             </div>
           ) : null}
         </DropdownMenuTrigger>
