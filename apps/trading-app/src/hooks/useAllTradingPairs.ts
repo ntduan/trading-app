@@ -4,6 +4,7 @@ export interface TradingPair {
   symbol: string;
   baseAsset: string;
   quoteAsset: string;
+  logoUrl: string;
 }
 
 const fetchTradingPairs = async (): Promise<TradingPair[]> => {

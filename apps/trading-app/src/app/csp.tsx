@@ -8,7 +8,8 @@ export function CSP() {
         style-src 'self' 'unsafe-inline';
         connect-src *;
         object-src 'none'; 
-        frame-src 'self' blob:;"
+        frame-src 'self' blob:;
+        img-src 'self' https://cdn.jsdelivr.net;"
     />
   );
 }

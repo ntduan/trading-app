@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { NavLink } from './nav-link';
 import { SwitchTheme } from './switch-theme';
 
@@ -7,7 +9,11 @@ export const Header = () => {
   return (
     <header className="bg-card text-foreground px-6 py-5">
       <div className="flex">
-        <h1 className="text-xl italic">Trading App</h1>
+        <h1 className="text-xl italic select-none">
+          <Link href="/trade" className="font-bold">
+            Trading App
+          </Link>
+        </h1>
         <nav className="flex space-x-8 ml-10 text-sm items-center">
           <NavLink href="/trade" className={cn('hover:text-primary-light')}>
             Trade
