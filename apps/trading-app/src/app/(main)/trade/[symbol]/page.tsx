@@ -1,4 +1,4 @@
-import { getTradingPairs } from '@/app/api/pairs/route';
+import { getTradingPairs } from '@/app/api/pairs/getTradingPairs';
 
 // Generate static params at build time using trading pairs data
 export async function generateStaticParams() {
