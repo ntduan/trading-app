@@ -1,6 +1,7 @@
-import Link from 'next/link';
-
+import { NavLink } from './nav-link';
 import { SwitchTheme } from './switch-theme';
+
+import { cn } from '@/lib/utils';
 
 export const Header = () => {
   return (
@@ -8,8 +9,12 @@ export const Header = () => {
       <div className="flex">
         <h1 className="text-xl italic">Trading App</h1>
         <nav className="flex space-x-8 ml-10 text-sm items-center">
-          <Link href="/trade">Trade</Link>
-          <Link href="/about">About</Link>
+          <NavLink href="/trade" className={cn('hover:text-primary-light')}>
+            Trade
+          </NavLink>
+          <NavLink href="/about" className={cn('hover:text-primary-light')}>
+            About
+          </NavLink>
         </nav>
         <div className="flex items-center ml-auto">
           <SwitchTheme />

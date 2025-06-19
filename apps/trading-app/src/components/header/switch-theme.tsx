@@ -14,7 +14,10 @@ export const SwitchTheme = ({ className }: { className?: string }) => {
   if (!isMounted) return null;
 
   return (
-    <div className={cn('cursor-pointer', className)} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+    <div
+      className={cn('cursor-pointer hover:text-primary-light font-bold', className)}
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+    >
       {theme === 'dark' ? <Sun /> : <Moon />}
     </div>
   );

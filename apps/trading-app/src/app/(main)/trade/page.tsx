@@ -1,5 +1,4 @@
 'use client';
-
 import { useAtom } from 'jotai';
 import { redirect } from 'next/navigation';
 
