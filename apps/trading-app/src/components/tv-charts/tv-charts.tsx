@@ -11,12 +11,27 @@ export const TVChartContainer = () => {
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const iframe = chartContainerRef.current?.querySelector('iframe');
+      if (iframe) {
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        observer.disconnect();
+      }
+    });
+
+    if (chartContainerRef.current) {
+      observer.observe(chartContainerRef.current, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
     const tvWidget = new widget({
       symbol: 'BTC/USDT',
       interval: '1' as ResolutionString,
       container: chartContainerRef.current!,
       library_path: '/charting_library/',
-      datafeed: datafeed,
+      datafeed,
       locale: 'en',
       disabled_features: [
         'header_symbol_search',
@@ -31,6 +46,10 @@ export const TVChartContainer = () => {
       enabled_features: ['study_templates'],
       theme: 'dark',
       studies_overrides: {},
+    });
+
+    tvWidget.onChartReady(() => {
+      tvWidget.activeChart().createStudy('Moving Average Exponential', false, false, { length: 9 }, undefined);
     });
 
     return () => {
