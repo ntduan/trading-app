@@ -11,7 +11,9 @@ const fetchTradingPairs = async (): Promise<TradingPair[]> => {
   if (!response.ok) {
     throw new Error('Failed to fetch trading pairs');
   }
-  return response.json();
+  const result = await response.json();
+
+  return result.result;
 };
 
 export const useAllTradingPairs = () => {

@@ -7,7 +7,12 @@ const pairs = [
   { symbol: 'ETHBTC', baseAsset: 'ETH', quoteAsset: 'BTC' },
 ];
 
+export async function getTradingPairs() {
+  return pairs;
+}
+
 export async function GET() {
+  const pairs = await getTradingPairs();
   return NextResponse.json({
     result: pairs,
   });
