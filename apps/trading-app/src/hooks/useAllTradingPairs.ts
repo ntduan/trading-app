@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-export interface TradingPair {
-  symbol: string;
-  baseAsset: string;
-  quoteAsset: string;
-  logoUrl: string;
-}
+import { type TradingPair } from '@/app/api/pairs/getTradingPairs';
 
 const fetchTradingPairs = async (): Promise<TradingPair[]> => {
   const response = await fetch('/api/pairs');

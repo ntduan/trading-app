@@ -94,7 +94,7 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: #1d2428;
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
+  --primary: rgb(80, 210, 193);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -131,4 +131,14 @@
   html {
     overflow-y: hidden;
   }
+}
+
+:root {
+  /* tradingview */
+  --tv-color-platform-background: #0f1a1f;
+  --tv-color-pane-background: #0f1a1f;
+  --tv-color-pane-background-secondary: #0f1a1f;
+  --tv-color-toolbar-button-text-active: #50d2c1;
+  --tv-color-toolbar-button-text-active-hover: #97fce4;
+  --ui-lib-button-default-color-content: #50d2c1;
 }

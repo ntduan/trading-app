@@ -28,12 +28,12 @@ export const CoinInfo = () => {
       <DropdownMenu onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           {activeTradingPair ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 select-none cursor-pointer">
               {activeTradingPair.logoUrl && (
                 <Image width={24} height={24} className="rounded-full" src={activeTradingPair.logoUrl} alt="" />
               )}
               <h2 className="text-xl">
-                {activeTradingPair.baseAsset}/{activeTradingPair.quoteAsset}
+                {activeTradingPair.baseAsset}-{activeTradingPair.quoteAsset}
               </h2>
               <ChevronDown
                 className={`transition-transform duration-200 ease-in-out ${isOpen ? 'rotate-180' : 'rotate-0'}`}
@@ -47,14 +47,14 @@ export const CoinInfo = () => {
             {allTradingPairs?.map((item) => (
               <Link href={`/trade/${item.symbol}`} key={item.symbol}>
                 <DropdownMenuItem className="select-none cursor-pointer">
-                  {item.baseAsset}/{item.quoteAsset}
+                  {item.baseAsset}-{item.quoteAsset}
                 </DropdownMenuItem>
               </Link>
             ))}
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-
+      <input />
       {/* <div className="text-lg">Details about the selected coin will be displayed here.</div> */}
     </Card>
   );

@@ -16,10 +16,6 @@ describe('Binance Adapter', () => {
     expect(adapter.name).toBe('Binance');
   });
 
-  it('should return supported pairs', () => {
-    expect(adapter.getSupportedPairs()).toEqual(pairs);
-  });
-
   it('should accept mock order', async () => {
     const result = await adapter.placeOrder({
       pair: 'BTC/USDT',

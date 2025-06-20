@@ -9,7 +9,8 @@ export function CSP() {
         connect-src *;
         object-src 'none'; 
         frame-src 'self' blob:;
-        img-src 'self' https://cdn.jsdelivr.net;"
+        img-src 'self' https://cdn.jsdelivr.net;
+        worker-src 'self' blob:;"
     />
   );
 }

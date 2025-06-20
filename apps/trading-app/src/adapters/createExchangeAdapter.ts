@@ -1,3 +1,7 @@
+import { type Bar } from 'tv-charting-library';
+
+import { type TradingPair } from '@/app/api/pairs/getTradingPairs';
+
 export type AdapterEventMap = {
   orderBook: { pair: string; bids: [number, number][]; asks: [number, number][] };
   kline: { pair: string; interval: string; kline: unknown };
@@ -7,24 +11,29 @@ export type AdapterEventMap = {
   error: { error: Error };
 };
 
-export type CreateExchangeAdapterFn<
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  provider = unknown,
-  properties extends Record<string, unknown> = Record<string, unknown>,
-> = (config: {
-  pairs: readonly string[];
-  emitter: (event: keyof AdapterEventMap, data: AdapterEventMap[keyof AdapterEventMap]) => void;
-}) => {
+export type Order = [price: number, quantity: number];
+
+export interface IExchangeAdapter {
   readonly id: string;
   readonly name: string;
   readonly type: string;
 
   connect(): Promise<void>;
   disconnect(): Promise<void>;
-  subscribeOrderBook(pair: string): void;
-  unsubscribeOrderBook(pair: string): void;
-  subscribeKlines(pair: string, interval: string): void;
-  unsubscribeKlines(pair: string, interval: string): void;
+  subscribeOrderBook(
+    symbol: string,
+    tickSize: number,
+    onRealtimeCallback: (bids: Order[], ask: Order[]) => void
+  ): { ws: WebSocket; worker: Worker };
+  unsubscribeOrderBook(connection: { ws: WebSocket; worker: Worker }): void;
+  subscribeKlines(
+    symbol: string,
+    resolution: string,
+    onRealtimeCallback: (bar: Bar) => void,
+    listenerGuid: string
+  ): void;
+  unsubscribeKlines(listenerGuid: string): void;
+  getHistory(symbol: string, resolution: string, from: number, to: number): Promise<Bar[]>;
   placeOrder(order: {
     pair: string;
     price: number;
@@ -32,10 +41,18 @@ export type CreateExchangeAdapterFn<
     side: 'buy' | 'sell';
     postOnly?: boolean;
   }): Promise<{ status: 'accepted' | 'rejected'; orderId?: string; message?: string }>;
-  getSupportedPairs(): string[];
+  setupTradingPairs(paris: TradingPair[]): void;
+  getSupportedTradingPairs(): TradingPair[];
+}
 
-  // Optional extension properties
-} & properties;
+export type ExchangeAdapterWithProperties<properties extends Record<string, unknown> = Record<string, unknown>> =
+  IExchangeAdapter & properties;
+
+export type CreateExchangeAdapterFn<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  provider = unknown,
+  properties extends Record<string, unknown> = Record<string, unknown>,
+> = (config?: unknown) => ExchangeAdapterWithProperties<properties>;
 
 export function createExchangeAdapter<
   provider = unknown,

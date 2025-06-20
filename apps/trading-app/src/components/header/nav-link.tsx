@@ -18,7 +18,6 @@ export const NavLink = ({
   exact?: boolean;
 }) => {
   const pathname = usePathname();
-  console.log('Current pathname:', pathname, href, exact, pathname.startsWith(href));
   const isActive = exact ? pathname === href : pathname.startsWith(href) && (href === '/' ? pathname === '/' : true);
 
   return (
