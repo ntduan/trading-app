@@ -13,7 +13,7 @@ function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimi
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      className={cn('relative py-2 border-b border-border', className)}
+      className={cn('relative py-2 border-b border-border select-none', className)}
       {...props}
     />
   );
