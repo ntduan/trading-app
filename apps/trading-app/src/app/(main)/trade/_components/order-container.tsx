@@ -1,16 +1,14 @@
 'use client';
 
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 
 import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-const TradingViewContainer = lazy(() => import('@/components/tradingview-chart/tradingview-container'));
-
-export const Market = () => {
-  const [activeTab, setActiveTab] = useState('Chart');
-  const [loadedTabs, setLoadedTabs] = useState(new Set(['Chart']));
+export const OrderContainer = () => {
+  const [activeTab, setActiveTab] = useState('Market');
+  const [loadedTabs, setLoadedTabs] = useState(new Set(['Market']));
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -22,18 +20,14 @@ export const Market = () => {
       <div>
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
-            <TabsTrigger value="Chart">Chart</TabsTrigger>
+            <TabsTrigger value="Market">Market</TabsTrigger>
             <TabsUnderline />
           </TabsList>
         </Tabs>
       </div>
       <div className="relative">
-        <div className={`${activeTab === 'Chart' ? 'block' : 'hidden'}`}>
-          {loadedTabs.has('Chart') && (
-            <Suspense>
-              <TradingViewContainer />
-            </Suspense>
-          )}
+        <div className={`${activeTab === 'Market' ? 'block' : 'hidden'}`}>
+          {loadedTabs.has('Market') && <div>Order Form</div>}
         </div>
       </div>
     </Card>

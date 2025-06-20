@@ -24,7 +24,7 @@ export const CoinInfo = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Card className="flex flex-row items-center px-4 py-2 h-20 mt-0.5">
+    <Card className="flex flex-row items-center px-4 py-2 h-20 mt-0.5 mx-1">
       <DropdownMenu onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           {activeTradingPair ? (

@@ -99,7 +99,7 @@ export const OrderBook: React.FC<OrderBookProps> = ({ height = 432, rowHeight = 
   const maxAskTotal = useMemo(() => asks.reduce((acc, [, q]) => acc + q, 0), [asks]);
 
   return (
-    <Card>
+    <div>
       <div className="flex justify-between px-2 pb-1 text-gray-400 font-semibold text-xs">
         <span className="w-1/3 text-left">Price</span>
         <span className="w-1/3 text-right">Size (BTC)</span>
@@ -149,6 +149,6 @@ export const OrderBook: React.FC<OrderBookProps> = ({ height = 432, rowHeight = 
           data: { orders: Order[]; isBid: boolean; maxTotal: number };
         }) => <OrderRow index={index} style={style} data={data} isBid={true} maxTotal={maxBidTotal} />}
       </List>
-    </Card>
+    </div>
   );
 };
