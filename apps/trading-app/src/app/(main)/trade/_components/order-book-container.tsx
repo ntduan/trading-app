@@ -21,7 +21,7 @@ export const OrderBookContainer = () => {
       <div>
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
-            <TabsTrigger value="OrderBook">OrderBook</TabsTrigger>
+            <TabsTrigger value="OrderBook">Order Book</TabsTrigger>
             <TabsUnderline />
           </TabsList>
         </Tabs>
