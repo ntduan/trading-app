@@ -2,30 +2,15 @@ import { type Bar } from 'tv-charting-library';
 
 import { type TradingPair } from '@/app/api/pairs/getTradingPairs';
 
-export type AdapterEventMap = {
-  orderBook: { pair: string; bids: [number, number][]; asks: [number, number][] };
-  kline: { pair: string; interval: string; kline: unknown };
-  trade: { pair: string; price: number; size: number; side: 'buy' | 'sell' };
-  connect: { exchange: string };
-  disconnect: { exchange: string };
-  error: { error: Error };
-};
-
-export type Order = [price: number, quantity: number];
+export type Side = 'bids' | 'asks';
+export type RawOrder = [string, string];
 
 export interface IExchangeAdapter {
   readonly id: string;
   readonly name: string;
   readonly type: string;
 
-  connect(): Promise<void>;
-  disconnect(): Promise<void>;
-  subscribeOrderBook(
-    symbol: string,
-    tickSize: number,
-    onRealtimeCallback: (bids: Order[], ask: Order[]) => void
-  ): { ws: WebSocket; worker: Worker };
-  unsubscribeOrderBook(connection: { ws: WebSocket; worker: Worker }): void;
+  subscribeOrderBook(symbol: string, onRealtimeCallback: (bids: RawOrder[], ask: RawOrder[]) => void): () => void;
   subscribeKlines(
     symbol: string,
     resolution: string,

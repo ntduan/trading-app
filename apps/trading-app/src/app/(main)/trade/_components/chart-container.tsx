@@ -5,6 +5,7 @@ import { lazy, Suspense, useState } from 'react';
 import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 
 const TradingViewContainer = lazy(() => import('@/components/tradingview-chart/tradingview-container'));
 
@@ -27,8 +28,8 @@ export const ChartContainer = () => {
           </TabsList>
         </Tabs>
       </div>
-      <div className="relative">
-        <div className={`${activeTab === 'Chart' ? 'block' : 'hidden'}`}>
+      <div className="relative h-full">
+        <div className={cn('h-full', activeTab === 'Chart' ? 'block' : 'hidden')}>
           {loadedTabs.has('Chart') && (
             <Suspense>
               <TradingViewContainer />

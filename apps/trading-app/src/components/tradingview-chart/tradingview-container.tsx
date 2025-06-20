@@ -25,16 +25,5 @@ export default function TradingViewContainer() {
     }
   }, []);
 
-  return (
-    <div
-      ref={chartContainerRef}
-      id="tv_chart_container"
-      className="bg-card"
-      style={{
-        width: '100%',
-        height: '500px',
-        position: 'relative',
-      }}
-    />
-  );
+  return <div ref={chartContainerRef} id="tv_chart_container" className="bg-card relative h-full" />;
 }

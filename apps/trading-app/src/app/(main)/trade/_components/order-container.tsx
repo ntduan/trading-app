@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
+import { TradeTicket } from '@/components/trade-ticket/trade-ticket';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -27,7 +28,7 @@ export const OrderContainer = () => {
       </div>
       <div className="relative">
         <div className={`${activeTab === 'Market' ? 'block' : 'hidden'}`}>
-          {loadedTabs.has('Market') && <div>Order Form</div>}
+          {loadedTabs.has('Market') && <TradeTicket bestAsk={100} bestBid={90} />}
         </div>
       </div>
     </Card>

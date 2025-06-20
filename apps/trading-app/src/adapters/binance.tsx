@@ -1,6 +1,6 @@
 import { type Bar } from 'tv-charting-library';
 
-import { createExchangeAdapter, type ExchangeAdapterWithProperties, type Order } from './createExchangeAdapter';
+import { createExchangeAdapter, type RawOrder, type ExchangeAdapterWithProperties } from './createExchangeAdapter';
 
 import { type TradingPair } from '@/app/api/pairs/getTradingPairs';
 import { resolutionToBinanceInterval } from '@/lib/utils';
@@ -24,17 +24,37 @@ type SocketConnection = {
   type: 'orderbook' | 'klines' | 'general';
 };
 
-export const binance = (parameters: { apiBaseUrl?: string }) => {
-  let ws: WebSocket | null = null;
-  let isConnected = false;
+type OrderBook = Map<string, string>;
 
-  // Internal event handlers
-  let onOrderBook: ((data: unknown) => void) | undefined;
-  let onKline: ((data: unknown) => void) | undefined;
-  let onTrade: ((data: unknown) => void) | undefined;
-  let onConnect: (() => void) | undefined;
-  let onDisconnect: (() => void) | undefined;
-  let onError: ((error: Error) => void) | undefined;
+interface DepthUpdateEvent {
+  e: 'depthUpdate';
+  E: number;
+  s: string;
+  U: number; // First update ID
+  u: number; // Final update ID
+  b: [string, string][]; // bids
+  a: [string, string][]; // asks
+}
+
+interface Snapshot {
+  lastUpdateId: number;
+  bids: [string, string][];
+  asks: [string, string][];
+}
+
+function applyDelta(book: OrderBook, updates: [string, string][]) {
+  for (const [price, size] of updates) {
+    if (Number(size) === 0) book.delete(price);
+    else book.set(price, size);
+  }
+}
+
+async function fetchSnapshot(symbol: string): Promise<Snapshot> {
+  const res = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol.toUpperCase()}&limit=1000`);
+  return res.json();
+}
+
+export const binance = () => {
   let supportedTradingPairs: TradingPair[] = [];
   const name = 'Binance';
   const socketConnections = new Map<string, SocketConnection>();
@@ -65,85 +85,58 @@ export const binance = (parameters: { apiBaseUrl?: string }) => {
     name: name,
     type: 'spot',
 
-    async connect() {
-      // Example: connect to Binance WebSocket
-      if (ws) return;
-      ws = new WebSocket(parameters.apiBaseUrl || 'wss://stream.binance.com:9443/ws');
-      ws.onopen = () => {
-        isConnected = true;
-        onConnect?.();
-      };
-      ws.onclose = () => {
-        isConnected = false;
-        onDisconnect?.();
-      };
-      ws.onerror = (e) => {
-        onError?.(new Error('WebSocket error'));
-      };
+    subscribeOrderBook(symbol: string, onRealtimeCallback: (bids: RawOrder[], ask: RawOrder[]) => void) {
+      const bids: OrderBook = new Map();
+      const asks: OrderBook = new Map();
+      let lastUpdateId = 0;
+      let snapshotLoaded = false;
+      const buffer: DepthUpdateEvent[] = [];
+
+      const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@depth@1000ms`);
+
       ws.onmessage = (event) => {
-        // TODO: Parse and dispatch orderBook/kline/trade events
-        // Example:
-        // const data = JSON.parse(event.data)
-        // if (data.e === 'depthUpdate') {
-        //   config.emitter('orderBook', { pair: data.s, bids: data.b, asks: data.a })
-        //   onOrderBook?.(data)
-        // }
-      };
-    },
+        const data: DepthUpdateEvent = JSON.parse(event.data.toString());
 
-    async disconnect() {
-      if (ws) {
-        ws.close();
-        ws = null;
-      }
-    },
-
-    subscribeOrderBook(symbol: string, tickSize: number, onRealtimeCallback: (bids: Order[], ask: Order[]) => void) {
-      // TODO: Send subscription message to Binance WS
-      // Example: ws?.send(JSON.stringify({ method: 'SUBSCRIBE', params: [`${pair.toLowerCase()}@depth`], id: 1 }))
-      const symbolStr = symbol.replace('/', '').toLowerCase();
-      const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbolStr}@depth@1000ms`);
-
-      let latestBids: Order[] = [];
-      let latestAsks: Order[] = [];
-
-      const worker = new Worker(new URL('@/workers/math.worker.ts', import.meta.url), { type: 'module' });
-
-      worker.onmessage = (event) => {
-        const { type, orders } = event.data;
-        if (type === 'bids') latestBids = orders;
-        if (type === 'asks') latestAsks = orders;
-
-        if (latestBids.length && latestAsks.length) {
-          onRealtimeCallback(latestBids, latestAsks);
-          latestBids = [];
-          latestAsks = [];
+        if (!snapshotLoaded) {
+          buffer.push(data);
+          return;
         }
+
+        if (data.u <= lastUpdateId) return;
+        if (data.U > lastUpdateId + 1) {
+          console.warn('[OrderBook] GAP detected, resync needed');
+          return;
+        }
+
+        applyDelta(bids, data.b);
+        applyDelta(asks, data.a);
+        lastUpdateId = data.u;
+
+        onRealtimeCallback(Array.from(bids.entries()), Array.from(asks.entries()));
       };
 
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+      fetchSnapshot(symbol).then((snapshot) => {
+        for (const [price, size] of snapshot.bids) bids.set(price, size);
+        for (const [price, size] of snapshot.asks) asks.set(price, size);
+        lastUpdateId = snapshot.lastUpdateId;
+        console.log(`[OrderBook] Snapshot loaded for ${symbol}`, { bids, asks });
+        for (const patch of buffer) {
+          if (patch.u <= lastUpdateId) continue;
+          if (patch.U > lastUpdateId + 1) {
+            console.warn('[OrderBook] GAP detected in buffer');
+            return;
+          }
+          applyDelta(bids, patch.b);
+          applyDelta(asks, patch.a);
+          lastUpdateId = patch.u;
+        }
 
-        worker.postMessage({
-          type: 'aggregate',
-          side: 'bids',
-          orders: data.b.map(([p, q]: string[]) => [parseFloat(p), parseFloat(q)]),
-          tickSize,
-        });
-        worker.postMessage({
-          type: 'aggregate',
-          side: 'asks',
-          orders: data.a.map(([p, q]: string[]) => [parseFloat(p), parseFloat(q)]),
-          tickSize,
-        });
-      };
-      return { ws, worker };
-    },
+        snapshotLoaded = true;
+        console.log(`[OrderBook] Buffer processed for ${symbol}`, { bids, asks });
+        onRealtimeCallback(Array.from(bids.entries()), Array.from(asks.entries()));
+      });
 
-    unsubscribeOrderBook(connection: { ws: WebSocket; worker: Worker }) {
-      // TODO: Send unsubscribe message
-      connection.ws.close();
-      connection.worker.terminate();
+      return () => ws.close();
     },
 
     subscribeKlines(symbol: string, resolution: string, onRealtimeCallback: (bar: Bar) => void, listenerGuid: string) {
@@ -223,5 +216,3 @@ export const binance = (parameters: { apiBaseUrl?: string }) => {
     },
   }));
 };
-
-export const BinanceAdapter = binance({});

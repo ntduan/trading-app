@@ -1,3 +1,5 @@
+import { Toaster } from 'react-hot-toast';
+
 import { ChartContainer } from './chart-container';
 import { CoinInfo } from './coin-info';
 
@@ -23,6 +25,7 @@ export function TradingInterface() {
           <OrderContainer />
         </div>
       </div>
+      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
     </>
   );
 }

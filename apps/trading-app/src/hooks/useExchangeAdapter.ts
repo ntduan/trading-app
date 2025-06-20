@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { binance } from '@/adapters/binance';
 import { type IExchangeAdapter } from '@/adapters/createExchangeAdapter';
 
-const binanceAdapterFn = binance({});
+const binanceAdapterFn = binance();
 
 const exchangeAdapterAtom = atom<IExchangeAdapter>(binanceAdapterFn());
 
