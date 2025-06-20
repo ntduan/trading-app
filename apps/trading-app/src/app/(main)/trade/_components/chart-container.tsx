@@ -18,7 +18,7 @@ export const ChartContainer = () => {
   };
 
   return (
-    <Card className="gap-0 py-0">
+    <Card className="gap-0 py-0 overflow-hidden">
       <div>
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
