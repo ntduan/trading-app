@@ -22,10 +22,10 @@ export const OrderBookRow = React.memo(
           className={cn('absolute right-0 top-0 h-full', isBids ? 'bg-green-900/30' : 'bg-red-900/30')}
           style={{ width: `${width}%` }}
         />
-        <div className="relative z-10 grid grid-cols-3 py-0.5 text-xs text-right">
+        <div className="relative z-10 grid grid-cols-3 py-0.5 text-xs text-right leading-tight">
           <div className={cn('text-left ml-2', isBids ? 'text-chart-2' : 'text-chart-1')}>{level.price.toFixed(2)}</div>
-          <div className="text-white">{level.amount.toFixed(3)}</div>
-          <div className="text-white">
+          <div className="text-foreground">{level.amount.toFixed(3)}</div>
+          <div className="text-foreground">
             {level.total >= 1000 ? `${(level.total / 1000).toFixed(2)}K` : level.total.toFixed(2)}
           </div>
         </div>

@@ -1,5 +1,3 @@
-import { Toaster } from 'react-hot-toast';
-
 import { ChartContainer } from './chart-container';
 import { CoinInfo } from './coin-info';
 
@@ -8,8 +6,6 @@ import { OrderContainer } from './order-container';
 
 import { TradingPairCheck } from './trading-pair-check';
 
-import { Card } from '@/components/ui/card';
-
 export function TradingInterface() {
   return (
     <>
@@ -17,15 +13,14 @@ export function TradingInterface() {
       <div className="flex gap-1 mt-0.5 flex-col">
         <CoinInfo />
 
-        <div className="grid gap-1 [grid-template-columns:minmax(253px,320px)_minmax(510px,880px)_minmax(253px,320px)] px-1">
-          <OrderBookContainer />
+        <div className="grid gap-1 [grid-template-columns:minmax(253px,360px)_minmax(510px,1fr)] [grid-template-rows:minmax(420px,1fr)_minmax(360px,auto)] px-1">
+          <OrderBookContainer className="row-span-2" />
 
           <ChartContainer />
 
           <OrderContainer />
         </div>
       </div>
-      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
     </>
   );
 }

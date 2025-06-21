@@ -1,15 +1,17 @@
 'use client';
 
+import { SnackbarProvider } from 'notistack';
 import { useState } from 'react';
 
+import { LimitOrder } from '@/components/limit-order/limit-order';
 import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
-import { TradeTicket } from '@/components/trade-ticket/trade-ticket';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 
 export const OrderContainer = () => {
-  const [activeTab, setActiveTab] = useState('Market');
-  const [loadedTabs, setLoadedTabs] = useState(new Set(['Market']));
+  const [activeTab, setActiveTab] = useState('Spot');
+  const [loadedTabs, setLoadedTabs] = useState(new Set(['Spot']));
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -17,20 +19,23 @@ export const OrderContainer = () => {
   };
 
   return (
-    <Card className="gap-0 py-0">
-      <div>
-        <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <TabsList>
-            <TabsTrigger value="Market">Market</TabsTrigger>
-            <TabsUnderline />
-          </TabsList>
-        </Tabs>
-      </div>
-      <div className="relative">
-        <div className={`${activeTab === 'Market' ? 'block' : 'hidden'}`}>
-          {loadedTabs.has('Market') && <TradeTicket bestAsk={100} bestBid={90} />}
+    <>
+      <SnackbarProvider />
+      <Card className="gap-0 py-0">
+        <div>
+          <Tabs value={activeTab} onValueChange={handleTabChange}>
+            <TabsList>
+              <TabsTrigger value="Spot">Spot</TabsTrigger>
+              <TabsUnderline />
+            </TabsList>
+          </Tabs>
         </div>
-      </div>
-    </Card>
+        <div className="relative h-full">
+          <div className={cn('h-full', `${activeTab === 'Spot' ? 'block' : 'hidden'}`)}>
+            {loadedTabs.has('Spot') && <LimitOrder bestAsk={100} bestBid={90} />}
+          </div>
+        </div>
+      </Card>
+    </>
   );
 };

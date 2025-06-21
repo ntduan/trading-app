@@ -7,6 +7,7 @@ import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Updater } from '@/state/updater';
 
+import { SnackbarProvider } from 'notistack';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],

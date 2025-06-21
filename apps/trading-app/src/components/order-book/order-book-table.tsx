@@ -8,7 +8,6 @@ export const OrderBookTable = memo(({ data, side }: { data: AggregatedLevel[]; s
   const maxTotal = Math.max(...data.map((d) => d.total));
 
   const processedData = useMemo(() => (side === 'bids' ? data : [...data].reverse()), [data, side]);
-  console.log('OrderBookTable data:', processedData);
   return (
     <div className="flex flex-col text-sm font-mono">
       <div className="flex flex-col gap-[1px]">

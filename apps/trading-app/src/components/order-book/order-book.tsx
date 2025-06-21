@@ -23,7 +23,6 @@ export const OrderBook = () => {
   });
 
   const { result, triggerUpdate } = useOrderbookRafUpdater(() => orderbookRef.current, tickSize);
-  console.log('Orderbook result:', result);
   const triggerUpdateRef = useRef(triggerUpdate);
 
   useEffect(() => {
@@ -48,7 +47,6 @@ export const OrderBook = () => {
 
   if (!tradingPair || !result) return <div className="h-[800px]" />;
 
-  console.log('Orderbook data:', result);
   return (
     <div className="p-1">
       <div className="flex justify-between px-2 pb-1 text-muted-foreground text-xs">

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { type TradingPair } from '@/app/api/pairs/getTradingPairs';
+import { QUERY_KEYS } from '@/constants';
 
 const fetchTradingPairs = async (): Promise<TradingPair[]> => {
   const response = await fetch('/api/pairs');
@@ -14,7 +15,7 @@ const fetchTradingPairs = async (): Promise<TradingPair[]> => {
 
 export const useAllTradingPairs = () => {
   return useQuery({
-    queryKey: ['trading-pairs'],
+    queryKey: [QUERY_KEYS.TRADING_PAIR],
     staleTime: Infinity,
     gcTime: Infinity,
     queryFn: fetchTradingPairs,

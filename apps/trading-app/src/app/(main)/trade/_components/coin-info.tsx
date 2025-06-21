@@ -25,7 +25,7 @@ export const CoinInfo = () => {
 
   return (
     <Card className="flex flex-row items-center px-4 py-2 h-20 mt-0.5 mx-1">
-      <DropdownMenu onOpenChange={setIsOpen}>
+      <DropdownMenu onOpenChange={setIsOpen} modal={false}>
         <DropdownMenuTrigger asChild>
           {activeTradingPair ? (
             <div className="flex items-center gap-2 select-none cursor-pointer">
@@ -54,8 +54,6 @@ export const CoinInfo = () => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <input />
-      {/* <div className="text-lg">Details about the selected coin will be displayed here.</div> */}
     </Card>
   );
 };

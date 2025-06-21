@@ -6,8 +6,9 @@ import { OrderBook } from '@/components/order-book/order-book';
 import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 
-export const OrderBookContainer = () => {
+export const OrderBookContainer = ({ className }: { className?: string }) => {
   const [activeTab, setActiveTab] = useState('OrderBook');
   const [loadedTabs, setLoadedTabs] = useState(new Set(['OrderBook']));
 
@@ -17,7 +18,7 @@ export const OrderBookContainer = () => {
   };
 
   return (
-    <Card className="gap-0 py-0">
+    <Card className={cn('gap-0 py-0', className)}>
       <div>
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>

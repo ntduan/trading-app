@@ -46,7 +46,6 @@ function aggregateAndSort(levels: Level[], side: Side, tickSize: number, descend
 }
 
 self.onmessage = (event) => {
-  console.log('Received message in worker', event.data);
   const { bids, asks, tickSize } = event.data;
   const aggregatedBids = aggregateAndSort(bids, 'bids', tickSize, true);
   const aggregatedAsks = aggregateAndSort(asks, 'asks', tickSize, false);
