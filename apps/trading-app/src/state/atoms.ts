@@ -32,6 +32,70 @@ export const _amountAtom = atom(
   }
 );
 
+export const _updateAmountAtom = atom(null, (get, set, update: { asset: string; amount: number }) => {
+  const currentBalance = get(_amountAtom);
+  const { asset, amount } = update;
+
+  const currentAmount = currentBalance[asset] || 0;
+  const newAmount = currentAmount + amount;
+
+  set(_amountAtom, {
+    ...currentBalance,
+    [asset]: newAmount,
+  });
+});
+
+// ...existing code...
+
+export const _cancelOrderAtom = atom(
+  null,
+  (get, set, { orderId, tradingPair }: { orderId: string; tradingPair: { baseAsset: string; quoteAsset: string } }) => {
+    const currentOrders = get(baseOrdersAtom);
+    const orderIndex = currentOrders.findIndex((order) => order.id === orderId);
+
+    if (orderIndex === -1) {
+      throw new Error('Order not found');
+    }
+
+    const orderToCancel = currentOrders[orderIndex];
+
+    if (orderToCancel.status !== 'pending') {
+      throw new Error('Only pending orders can be cancelled');
+    }
+
+    // Calculate refund
+    const refundAmount =
+      orderToCancel.side === 'buy'
+        ? orderToCancel.price * orderToCancel.amount // Refund quote asset for buy orders
+        : orderToCancel.amount; // Refund base asset for sell orders
+
+    const refundAsset = orderToCancel.side === 'buy' ? tradingPair.quoteAsset : tradingPair.baseAsset;
+
+    // Update balance
+    const currentBalance = get(_amountAtom);
+    const currentAmount = currentBalance[refundAsset] || 0;
+    const newAmount = currentAmount + refundAmount;
+
+    set(_amountAtom, {
+      ...currentBalance,
+      [refundAsset]: newAmount,
+    });
+
+    // Update order status
+    const updatedOrders = [...currentOrders];
+    updatedOrders[orderIndex] = {
+      ...orderToCancel,
+      status: 'cancelled' as const,
+    };
+
+    set(baseOrdersAtom, updatedOrders);
+
+    return {
+      order: updatedOrders[orderIndex],
+      refund: { asset: refundAsset, amount: refundAmount },
+    };
+  }
+);
 export type Order = {
   id: string;
   side: 'buy' | 'sell';

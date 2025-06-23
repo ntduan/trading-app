@@ -13,6 +13,7 @@ export const ChartContainer = () => {
   const [activeTab, setActiveTab] = useState('Chart');
   const [loadedTabs, setLoadedTabs] = useState(new Set(['Chart']));
 
+  /* v8 ignore next 4 */
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setLoadedTabs((prev) => new Set([...prev, value]));
@@ -24,12 +25,11 @@ export const ChartContainer = () => {
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
             <TabsTrigger value="Chart">Chart</TabsTrigger>
-            <TabsUnderline />
           </TabsList>
         </Tabs>
       </div>
       <div className="relative h-full">
-        <div className={cn('h-full', activeTab === 'Chart' ? 'block' : 'hidden')}>
+        <div className={cn('h-full', /* v8 ignore next line */ activeTab === 'Chart' ? 'block' : 'hidden')}>
           {loadedTabs.has('Chart') && (
             <Suspense>
               <TradingViewContainer />

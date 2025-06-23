@@ -45,7 +45,7 @@ export const OrderBook = () => {
     };
   }, [tradingPair, tickSize, adapter]);
 
-  if (!tradingPair || !result) return <div className="h-[800px]" />;
+  if (!tradingPair || !result) return <div data-testid="order-book-empty" className="h-[800px]" />;
 
   return (
     <div className="p-1">

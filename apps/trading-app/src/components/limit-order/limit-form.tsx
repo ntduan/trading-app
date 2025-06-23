@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useMemo } from 'react';
@@ -12,6 +12,7 @@ import { AccountInfo } from './account-info';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { QUERY_KEYS } from '@/constants';
 import { useActiveTradingPairInfo } from '@/hooks/useActiveTradingPairInfo';
 import { useUserBalance } from '@/hooks/useUserBalance';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,7 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
   const { data: balance, refetch } = useUserBalance();
   const updateAmount = useSetAtom(_amountAtom);
   const addOrder = useSetAtom(_ordersAtom);
+  const queryClient = useQueryClient();
 
   const {
     control,
@@ -118,10 +120,13 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
       }
     },
     onSuccess: (data) => {
-      refetch();
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_BALANCE] });
       reset();
       console.log('Order submitted successfully:', data);
-      enqueueSnackbar('That was easy!');
+      enqueueSnackbar('Limit order placed successfully', {
+        variant: 'success',
+      });
     },
     onError: (error) => {
       console.error('Error submitting order:', error);

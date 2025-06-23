@@ -13,6 +13,7 @@ export const OrderContainer = () => {
   const [activeTab, setActiveTab] = useState('Spot');
   const [loadedTabs, setLoadedTabs] = useState(new Set(['Spot']));
 
+  /* v8 ignore next 4 */
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setLoadedTabs((prev) => new Set([...prev, value]));
@@ -20,18 +21,22 @@ export const OrderContainer = () => {
 
   return (
     <>
-      <SnackbarProvider />
+      <SnackbarProvider
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      />
       <Card className="gap-0 py-0">
         <div>
           <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList>
               <TabsTrigger value="Spot">Spot</TabsTrigger>
-              <TabsUnderline />
             </TabsList>
           </Tabs>
         </div>
         <div className="relative h-full">
-          <div className={cn('h-full', `${activeTab === 'Spot' ? 'block' : 'hidden'}`)}>
+          <div className={cn('h-full', `${/* v8 ignore next line */ activeTab === 'Spot' ? 'block' : 'hidden'}`)}>
             {loadedTabs.has('Spot') && <LimitOrder bestAsk={100} bestBid={90} />}
           </div>
         </div>

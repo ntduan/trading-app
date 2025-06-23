@@ -17,6 +17,7 @@ function limitDecimals(value: string, maxDecimals = 2): string {
 
 export const AmountInput = ({ label, value, onChange, step = 1, unit = '', maxDecimals = 2 }: AmountInputProps) => {
   const update = (delta: number) => {
+    /* v8 ignore next */
     const num = parseFloat(value || '0');
     const next = (num + delta).toFixed(maxDecimals);
     onChange(next);

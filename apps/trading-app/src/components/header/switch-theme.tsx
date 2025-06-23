@@ -18,7 +18,7 @@ export const SwitchTheme = ({ className }: { className?: string }) => {
       className={cn('cursor-pointer hover:text-primary-light font-bold', className)}
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
     >
-      {theme === 'dark' ? <Sun /> : <Moon />}
+      {theme === 'dark' ? <Sun data-testid="lucide-sun" /> : <Moon data-testid="lucide-moon" />}
     </div>
   );
 };

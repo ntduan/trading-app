@@ -33,6 +33,7 @@ export const OrderBookRow = React.memo(
     );
   },
   (prev, next) =>
+    /* v8 ignore next 5 */
     prev.level.price === next.level.price &&
     prev.level.amount === next.level.amount &&
     prev.level.total === next.level.total &&

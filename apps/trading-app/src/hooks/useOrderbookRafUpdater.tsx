@@ -2,7 +2,7 @@ import { useCallback, useMemo, useRef } from 'react';
 
 import { useOrderbookWorker } from './useOrderbookWorker';
 
-type Level = [string, string];
+export type Level = [string, string];
 
 export function useOrderbookRafUpdater(getData: () => { bids: Level[]; asks: Level[] }, tickSize: number) {
   const { result, post } = useOrderbookWorker();

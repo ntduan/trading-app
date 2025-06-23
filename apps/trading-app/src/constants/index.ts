@@ -7,6 +7,7 @@ export const STORAGE_KEYS = {
 export const QUERY_KEYS = {
   TRADING_PAIR: 'trading_pair',
   USER_BALANCE: 'user-balance',
+  ORDERS: 'orders',
 };
 
 export const DEFAULT_TRADING_PAIR = 'BTC/USDT';

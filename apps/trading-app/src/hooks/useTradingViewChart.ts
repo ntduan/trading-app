@@ -15,7 +15,7 @@ import { useIsDesktop } from './useIsDesktop';
 
 import { Datafeed } from '@/lib/data-feed';
 
-const getOverrides = (theme: ThemeName) => {
+export const getOverrides = (theme: ThemeName) => {
   return theme === 'dark'
     ? {
         'paneProperties.background': '#0f1a1f',

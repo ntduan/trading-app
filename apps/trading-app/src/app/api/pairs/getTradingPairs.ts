@@ -2,7 +2,7 @@ export interface TradingPair {
   symbol: string;
   baseAsset: string;
   quoteAsset: string;
-  logoUrl: string;
+  logoUrl: string | null;
   description: string;
 }
 

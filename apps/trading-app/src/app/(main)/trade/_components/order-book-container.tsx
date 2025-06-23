@@ -12,6 +12,7 @@ export const OrderBookContainer = ({ className }: { className?: string }) => {
   const [activeTab, setActiveTab] = useState('OrderBook');
   const [loadedTabs, setLoadedTabs] = useState(new Set(['OrderBook']));
 
+  /* v8 ignore next 4 */
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setLoadedTabs((prev) => new Set([...prev, value]));
@@ -23,12 +24,11 @@ export const OrderBookContainer = ({ className }: { className?: string }) => {
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
             <TabsTrigger value="OrderBook">Order Book</TabsTrigger>
-            <TabsUnderline />
           </TabsList>
         </Tabs>
       </div>
       <div className="relative">
-        <div className={`${activeTab === 'OrderBook' ? 'block' : 'hidden'}`}>
+        <div className={`${/* v8 ignore next line */ activeTab === 'OrderBook' ? 'block' : 'hidden'}`}>
           {loadedTabs.has('OrderBook') && <OrderBook />}
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { type Bar } from 'tv-charting-library';
 
-import { createExchangeAdapter, type RawOrder, type ExchangeAdapterWithProperties } from './createExchangeAdapter';
+import { createExchangeAdapter, type ExchangeAdapterWithProperties, type RawOrder } from './createExchangeAdapter';
 
 import { type TradingPair } from '@/app/api/pairs/getTradingPairs';
 import { resolutionToBinanceInterval } from '@/lib/utils';

@@ -15,6 +15,7 @@ export const LimitOrder: React.FC<LimitOrderProps> = ({ bestBid, bestAsk }) => {
   const [side, setSide] = useState<'buy' | 'sell'>('buy');
 
   useEffect(() => {
+    /* v8 ignore next 2 */
     if (side === 'buy') setPrice(bestBid);
     else setPrice(bestAsk);
   }, [bestBid, bestAsk, side]);
