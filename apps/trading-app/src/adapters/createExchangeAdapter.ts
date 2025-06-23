@@ -10,7 +10,7 @@ export interface IExchangeAdapter {
   readonly name: string;
   readonly type: string;
 
-  subscribeOrderBook(symbol: string, onRealtimeCallback: (bids: RawOrder[], ask: RawOrder[]) => void): () => void;
+  subscribeOrderbook(symbol: string, onRealtimeCallback: (bids: RawOrder[], ask: RawOrder[]) => void): () => void;
   subscribeKlines(
     symbol: string,
     resolution: string,

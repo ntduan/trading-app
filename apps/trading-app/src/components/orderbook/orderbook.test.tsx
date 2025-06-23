@@ -3,12 +3,11 @@ import * as jotai from 'jotai';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
-import { OrderBook } from './order-book';
+import { Orderbook } from './orderbook';
 
 import { type RawOrder } from '@/adapters/createExchangeAdapter';
 import * as useActiveTradingPairInfoModule from '@/hooks/useActiveTradingPairInfo';
 import * as useExchangeAdapterModule from '@/hooks/useExchangeAdapter';
-import * as useOrderbookRafUpdaterModule from '@/hooks/useOrderbookRafUpdater';
 import * as usePriceDirectionModule from '@/hooks/usePriceDirection';
 
 // Mocks
@@ -25,26 +24,23 @@ vi.mock('@/hooks/useActiveTradingPairInfo', () => ({
 vi.mock('@/hooks/useExchangeAdapter', () => ({
   useExchangeAdapter: vi.fn(),
 }));
-vi.mock('@/hooks/useOrderbookRafUpdater', () => ({
-  useOrderbookRafUpdater: vi.fn(),
-}));
 vi.mock('@/hooks/usePriceDirection', () => ({
   usePriceDirection: vi.fn(),
 }));
-vi.mock('./order-book-table', () => ({
-  OrderBookTable: ({ side, data }: { side: string; data: unknown }) => (
-    <div data-testid={`order-book-table-${side}`}>{JSON.stringify(data)}</div>
+vi.mock('./orderbook-table', () => ({
+  OrderbookTable: ({ side, data }: { side: string; data: unknown }) => (
+    <div data-testid={`orderbook-table-${side}`}>{JSON.stringify(data)}</div>
   ),
 }));
-vi.mock('./order-book-mid-price', () => ({
+vi.mock('./orderbook-mid-price', () => ({
   OrderbookMidPrice: ({ price, direction }: { price: number; direction: string }) => (
-    <div data-testid="order-book-mid-price">
+    <div data-testid="orderbook-mid-price">
       {price}-{direction}
     </div>
   ),
 }));
 
-describe('OrderBook', () => {
+describe('Orderbook', () => {
   const mockTickSize = 0.01;
   const mockTradingPair = {
     symbol: 'BTCUSDT',
@@ -58,7 +54,7 @@ describe('OrderBook', () => {
   };
   const mockDirection = 'up';
 
-  let subscribeOrderBook: (symbol: string, cb: (bids: RawOrder[], asks: RawOrder[]) => void) => () => void;
+  let subscribeOrderbook: (symbol: string, cb: (bids: RawOrder[], asks: RawOrder[]) => void) => () => void;
   let unsubscribeFn: () => void;
 
   beforeEach(() => {
@@ -70,52 +66,43 @@ describe('OrderBook', () => {
     });
 
     unsubscribeFn = vi.fn();
-    subscribeOrderBook = vi.fn().mockReturnValue(unsubscribeFn);
+    subscribeOrderbook = vi.fn().mockReturnValue(unsubscribeFn);
 
     (useExchangeAdapterModule.useExchangeAdapter as Mock).mockReturnValue({
       adapter: {
-        subscribeOrderBook,
+        subscribeOrderbook,
       },
     });
-
-    (useOrderbookRafUpdaterModule.useOrderbookRafUpdater as Mock).mockImplementation((getRef, tickSize) => ({
-      result: mockResult,
-      triggerUpdate: vi.fn(),
-    }));
 
     (usePriceDirectionModule.usePriceDirection as Mock).mockReturnValue(mockDirection);
   });
 
   it('renders empty state when tradingPair or result is missing', () => {
     (useActiveTradingPairInfoModule.useActiveTradingPairInfo as Mock).mockReturnValueOnce({ data: null });
-    render(<OrderBook />);
+    render(<Orderbook />);
     // Check for the correct empty indicator or fallback UI
-    expect(screen.getByTestId('order-book-empty')).toBeInTheDocument();
+    expect(screen.getByTestId('orderbook-empty')).toBeInTheDocument();
   });
 
   it('renders empty state when result is missing', () => {
-    (useOrderbookRafUpdaterModule.useOrderbookRafUpdater as Mock).mockReturnValueOnce({
-      result: null,
-      triggerUpdate: vi.fn(),
-    });
-    render(<OrderBook />);
-    expect(screen.getByTestId('order-book-empty')).toBeInTheDocument();
+    render(<Orderbook />);
+    expect(screen.getByTestId('orderbook-empty')).toBeInTheDocument();
   });
 
   it('renders order book tables and mid price', () => {
-    render(<OrderBook />);
+    render(<Orderbook />);
     expect(screen.getByText(/Price \(USDT\)/)).toBeInTheDocument();
     expect(screen.getByText(/Amount \(BTC\)/)).toBeInTheDocument();
     expect(screen.getByText(/Total/)).toBeInTheDocument();
 
-    expect(screen.getByTestId('order-book-table-asks')).toHaveTextContent(JSON.stringify(mockResult.asks));
-    expect(screen.getByTestId('order-book-table-bids')).toHaveTextContent(JSON.stringify(mockResult.bids));
-    expect(screen.getByTestId('order-book-mid-price')).toHaveTextContent(`${mockResult.mid}-${mockDirection}`);
+    expect(screen.getByTestId('orderbook-table-asks')).toHaveTextContent(JSON.stringify(mockResult.asks));
+    expect(screen.getByTestId('orderbook-table-bids')).toHaveTextContent(JSON.stringify(mockResult.bids));
+    expect(screen.getByTestId('orderbook-mid-price')).toHaveTextContent(`${mockResult.mid}-${mockDirection}`);
   });
 
   it('subscribes and unsubscribes to orderbook updates', () => {
-    const { unmount } = render(<OrderBook />);
-    expect(subscribeOrderBook).toHaveBeenCalledWith(mockTradingPair.symbol, expect.any(Function));
+    const { unmount } = render(<Orderbook />);
+    expect(subscribeOrderbook).toHaveBeenCalledWith(mockTradingPair.symbol, expect.any(Function));
     // Unmount triggers unsubscribe
     unmount();
     expect(unsubscribeFn).toHaveBeenCalled();
@@ -124,18 +111,14 @@ describe('OrderBook', () => {
   it('updates orderbookRef and triggers update on orderbook callback', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let callback: any;
-    (subscribeOrderBook as Mock).mockImplementationOnce((symbol, cb) => {
+    (subscribeOrderbook as Mock).mockImplementationOnce((symbol, cb) => {
       callback = cb;
       return unsubscribeFn;
     });
 
     const triggerUpdate = vi.fn();
-    (useOrderbookRafUpdaterModule.useOrderbookRafUpdater as Mock).mockImplementationOnce((getRef, tickSize) => ({
-      result: mockResult,
-      triggerUpdate,
-    }));
 
-    render(<OrderBook />);
+    render(<Orderbook />);
     // Simulate orderbook update
     const bids = [{ price: 10, amount: 1 }];
     const asks = [{ price: 20, amount: 2 }];

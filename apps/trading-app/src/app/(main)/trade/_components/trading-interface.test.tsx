@@ -10,10 +10,10 @@ vi.mock('./trading-pair-check', () => ({
 vi.mock('./coin-info', () => ({
   CoinInfo: () => <div data-testid="coin-info">CoinInfo</div>,
 }));
-vi.mock('./order-book-container', () => ({
-  OrderBookContainer: ({ className }: { className?: string }) => (
-    <div data-testid="order-book" className={className}>
-      OrderBookContainer
+vi.mock('./orderbook-container', () => ({
+  OrderbookContainer: ({ className }: { className?: string }) => (
+    <div data-testid="orderbook" className={className}>
+      OrderbookContainer
     </div>
   ),
 }));
@@ -33,15 +33,15 @@ describe('TradingInterface', () => {
 
     expect(screen.getByTestId('trading-pair-check')).toBeInTheDocument();
     expect(screen.getByTestId('coin-info')).toBeInTheDocument();
-    expect(screen.getByTestId('order-book')).toBeInTheDocument();
+    expect(screen.getByTestId('orderbook')).toBeInTheDocument();
     expect(screen.getByTestId('chart-container')).toBeInTheDocument();
     expect(screen.getByTestId('order-container')).toBeInTheDocument();
     expect(screen.getByTestId('history-container')).toBeInTheDocument();
   });
 
-  it('passes className prop to OrderBookContainer', () => {
+  it('passes className prop to OrderbookContainer', () => {
     render(<TradingInterface />);
-    const orderBook = screen.getByTestId('order-book');
-    expect(orderBook.className).toContain('row-span-2');
+    const orderbook = screen.getByTestId('orderbook');
+    expect(orderbook.className).toContain('row-span-2');
   });
 });

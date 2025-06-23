@@ -1,21 +1,23 @@
-import { useActiveTradingPairInfo } from '@/hooks/useActiveTradingPairInfo';
+import { useAtomValue } from 'jotai';
+
 import { useUserBalance } from '@/hooks/useUserBalance';
+import { activeTradingPairInfoAtom } from '@/state/atoms';
 
 export const AccountInfo = ({ side }: { side: 'buy' | 'sell' }) => {
-  const { data: pair } = useActiveTradingPairInfo();
+  const activePair = useAtomValue(activeTradingPairInfoAtom);
   const { data: balance } = useUserBalance();
-  const baseAssetBalance = pair?.baseAsset ? balance?.[pair.baseAsset] : undefined;
-  const quoteAssetBalance = pair?.quoteAsset ? balance?.[pair.quoteAsset] : undefined;
+  const baseAssetBalance = activePair?.baseAsset ? balance?.[activePair.baseAsset] : undefined;
+  const quoteAssetBalance = activePair?.quoteAsset ? balance?.[activePair.quoteAsset] : undefined;
 
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between ">
         <div className="text-xs text-muted-foreground capitalize">Available</div>
         <div className="text-xs flex gap-1">
-          {pair?.baseAsset ? (
+          {activePair?.baseAsset ? (
             <>
               <span>{side === 'buy' ? quoteAssetBalance : baseAssetBalance}</span>
-              <span>{side === 'buy' ? pair?.quoteAsset : pair?.baseAsset}</span>
+              <span>{side === 'buy' ? activePair?.quoteAsset : activePair?.baseAsset}</span>
             </>
           ) : (
             '--'
@@ -25,10 +27,10 @@ export const AccountInfo = ({ side }: { side: 'buy' | 'sell' }) => {
       <div className="flex items-center justify-between ">
         <div className="text-xs text-muted-foreground capitalize">Current Position</div>
         <div className="text-xs flex gap-1">
-          {pair?.baseAsset ? (
+          {activePair?.baseAsset ? (
             <>
               <span>{baseAssetBalance}</span>
-              <span>{pair?.baseAsset}</span>
+              <span>{activePair?.baseAsset}</span>
             </>
           ) : (
             '--'

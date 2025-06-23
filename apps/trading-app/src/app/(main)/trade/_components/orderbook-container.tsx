@@ -2,15 +2,14 @@
 
 import { useState } from 'react';
 
-import { OrderBook } from '@/components/order-book/order-book';
-import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
+import { Orderbook } from '@/components/orderbook/orderbook';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-export const OrderBookContainer = ({ className }: { className?: string }) => {
-  const [activeTab, setActiveTab] = useState('OrderBook');
-  const [loadedTabs, setLoadedTabs] = useState(new Set(['OrderBook']));
+export const OrderbookContainer = ({ className }: { className?: string }) => {
+  const [activeTab, setActiveTab] = useState('Orderbook');
+  const [loadedTabs, setLoadedTabs] = useState(new Set(['Orderbook']));
 
   /* v8 ignore next 4 */
   const handleTabChange = (value: string) => {
@@ -23,13 +22,13 @@ export const OrderBookContainer = ({ className }: { className?: string }) => {
       <div>
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList>
-            <TabsTrigger value="OrderBook">Order Book</TabsTrigger>
+            <TabsTrigger value="Orderbook">Order Book</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
       <div className="relative">
-        <div className={`${/* v8 ignore next line */ activeTab === 'OrderBook' ? 'block' : 'hidden'}`}>
-          {loadedTabs.has('OrderBook') && <OrderBook />}
+        <div className={`${/* v8 ignore next line */ activeTab === 'Orderbook' ? 'block' : 'hidden'}`}>
+          {loadedTabs.has('Orderbook') && <Orderbook />}
         </div>
       </div>
     </Card>

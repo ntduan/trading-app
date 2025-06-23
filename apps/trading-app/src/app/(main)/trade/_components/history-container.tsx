@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-export const HistoryContainer = () => {
+export const HistoryContainer = ({ className }: { className: string }) => {
   const [activeTab, setActiveTab] = useState('Orders');
   const [loadedTabs, setLoadedTabs] = useState(new Set(['Orders']));
 
@@ -26,7 +26,7 @@ export const HistoryContainer = () => {
           horizontal: 'right',
         }}
       />
-      <Card className="gap-0 py-0">
+      <Card className={cn('gap-0 py-0', className)}>
         <div>
           <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList>

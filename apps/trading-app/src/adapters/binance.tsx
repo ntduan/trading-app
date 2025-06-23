@@ -24,7 +24,7 @@ type SocketConnection = {
   type: 'orderbook' | 'klines' | 'general';
 };
 
-type OrderBook = Map<string, string>;
+type Orderbook = Map<string, string>;
 
 interface DepthUpdateEvent {
   e: 'depthUpdate';
@@ -42,7 +42,7 @@ interface Snapshot {
   asks: [string, string][];
 }
 
-function applyDelta(book: OrderBook, updates: [string, string][]) {
+function applyDelta(book: Orderbook, updates: [string, string][]) {
   for (const [price, size] of updates) {
     if (Number(size) === 0) book.delete(price);
     else book.set(price, size);
@@ -85,9 +85,9 @@ export const binance = () => {
     name: name,
     type: 'spot',
 
-    subscribeOrderBook(symbol: string, onRealtimeCallback: (bids: RawOrder[], ask: RawOrder[]) => void) {
-      const bids: OrderBook = new Map();
-      const asks: OrderBook = new Map();
+    subscribeOrderbook(symbol: string, onRealtimeCallback: (bids: RawOrder[], ask: RawOrder[]) => void) {
+      const bids: Orderbook = new Map();
+      const asks: Orderbook = new Map();
       let lastUpdateId = 0;
       let snapshotLoaded = false;
       const buffer: DepthUpdateEvent[] = [];
@@ -104,7 +104,7 @@ export const binance = () => {
 
         if (data.u <= lastUpdateId) return;
         if (data.U > lastUpdateId + 1) {
-          console.warn('[OrderBook] GAP detected, resync needed');
+          console.warn('[Orderbook] GAP detected, resync needed');
           return;
         }
 
@@ -119,11 +119,11 @@ export const binance = () => {
         for (const [price, size] of snapshot.bids) bids.set(price, size);
         for (const [price, size] of snapshot.asks) asks.set(price, size);
         lastUpdateId = snapshot.lastUpdateId;
-        console.log(`[OrderBook] Snapshot loaded for ${symbol}`, { bids, asks });
+        console.log(`[Orderbook] Snapshot loaded for ${symbol}`, { bids, asks });
         for (const patch of buffer) {
           if (patch.u <= lastUpdateId) continue;
           if (patch.U > lastUpdateId + 1) {
-            console.warn('[OrderBook] GAP detected in buffer');
+            console.warn('[Orderbook] GAP detected in buffer');
             return;
           }
           applyDelta(bids, patch.b);
@@ -132,7 +132,7 @@ export const binance = () => {
         }
 
         snapshotLoaded = true;
-        console.log(`[OrderBook] Buffer processed for ${symbol}`, { bids, asks });
+        console.log(`[Orderbook] Buffer processed for ${symbol}`, { bids, asks });
         onRealtimeCallback(Array.from(bids.entries()), Array.from(asks.entries()));
       });
 

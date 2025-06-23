@@ -1,4 +1,6 @@
+import { useAtomValue } from 'jotai';
 import { useTheme } from 'next-themes';
+
 import { useCallback, useEffect, useState } from 'react';
 import {
   type IChartingLibraryWidget,
@@ -8,7 +10,7 @@ import {
   widget as Widget,
 } from 'tv-charting-library';
 
-import { useActiveTradingPairInfo } from './useActiveTradingPairInfo';
+import { activeTradingPairSymbolAtom } from './../state/atoms';
 
 import { useExchangeAdapter } from './useExchangeAdapter';
 import { useIsDesktop } from './useIsDesktop';
@@ -31,8 +33,7 @@ export const getOverrides = (theme: ThemeName) => {
 export function useTradingViewChart() {
   const isDesktop = useIsDesktop();
   const { theme } = useTheme();
-  const { data: activeTradingPair } = useActiveTradingPairInfo();
-  const activeSymbol = activeTradingPair?.symbol;
+  const activeSymbol = useAtomValue(activeTradingPairSymbolAtom);
   // const { multiplexer, reconnectCounter } = useWebSocketStatus();
   const { adapter } = useExchangeAdapter();
 

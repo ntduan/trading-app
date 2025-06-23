@@ -1,8 +1,8 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSetAtom } from 'jotai';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useAtomValue, useSetAtom } from 'jotai';
+import { enqueueSnackbar } from 'notistack';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
@@ -13,10 +13,9 @@ import { AccountInfo } from './account-info';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { QUERY_KEYS } from '@/constants';
-import { useActiveTradingPairInfo } from '@/hooks/useActiveTradingPairInfo';
 import { useUserBalance } from '@/hooks/useUserBalance';
 import { cn } from '@/lib/utils';
-import { _amountAtom, _ordersAtom, type Order } from '@/state/atoms';
+import { _amountAtom, _ordersAtom, activeTradingPairInfoAtom, type Order } from '@/state/atoms';
 
 type LimitFormFormProps = {
   side: 'buy' | 'sell';
@@ -36,7 +35,7 @@ const isValidNumber = (value: string) => {
 };
 
 export const LimitForm = ({ side }: LimitFormFormProps) => {
-  const { data: pair } = useActiveTradingPairInfo();
+  const activePair = useAtomValue(activeTradingPairInfoAtom);
   const { data: balance, refetch } = useUserBalance();
   const updateAmount = useSetAtom(_amountAtom);
   const addOrder = useSetAtom(_ordersAtom);
@@ -60,15 +59,15 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
   const watchedPrice = watch('price');
 
   const maxAmount = useMemo(() => {
-    if (!balance || !pair?.quoteAsset) return 0;
+    if (!balance || !activePair?.quoteAsset) return 0;
     if (side === 'buy') {
       const priceNum = parseFloat(watchedPrice);
       if (!priceNum || priceNum <= 0) return 0;
-      return Number((balance[pair.quoteAsset] / priceNum).toFixed(4));
+      return Number((balance[activePair.quoteAsset] / priceNum).toFixed(4));
     } else {
-      return balance[pair.baseAsset];
+      return balance[activePair.baseAsset];
     }
-  }, [balance, pair?.baseAsset, pair?.quoteAsset, side, watchedPrice]);
+  }, [balance, activePair?.baseAsset, activePair?.quoteAsset, side, watchedPrice]);
 
   const submitOrderMutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -77,17 +76,17 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
       const price = parseFloat(data.price);
       const amount = parseFloat(data.amount);
 
-      if (!pair || !balance) {
-        throw new Error('Missing pair or balance data');
+      if (!activePair || !balance) {
+        throw new Error('Missing activePair or balance data');
       }
 
       if (side === 'buy') {
         const totalCost = price * amount;
-        if (balance[pair.quoteAsset] < totalCost) {
+        if (balance[activePair.quoteAsset] < totalCost) {
           throw new Error('Insufficient balance');
         }
       } else {
-        if (balance[pair.baseAsset] < amount) {
+        if (balance[activePair.baseAsset] < amount) {
           throw new Error('Insufficient balance');
         }
       }
@@ -97,7 +96,7 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
         side,
         price,
         amount,
-        pair: pair.symbol,
+        pair: activePair.symbol,
         postOnly: data.postOnly,
         status: 'pending',
         createdAt: Date.now(),
@@ -107,13 +106,13 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
       addOrder(newOrder);
 
       // update balance
-      if (balance && pair) {
+      if (balance && activePair) {
         const newBalance = { ...balance };
         if (side === 'buy') {
           const totalCost = price * amount;
-          newBalance[pair.quoteAsset] = Math.max(0, newBalance[pair.quoteAsset] - totalCost);
+          newBalance[activePair.quoteAsset] = Math.max(0, newBalance[activePair.quoteAsset] - totalCost);
         } else {
-          newBalance[pair.baseAsset] = Math.max(0, newBalance[pair.baseAsset] - amount);
+          newBalance[activePair.baseAsset] = Math.max(0, newBalance[activePair.baseAsset] - amount);
         }
 
         updateAmount(newBalance);
@@ -154,7 +153,7 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
           render={({ field }) => (
             <AmountInput
               label="Price"
-              unit={pair?.quoteAsset}
+              unit={activePair?.quoteAsset}
               value={field.value}
               onChange={field.onChange}
               step={0.01}
@@ -184,7 +183,7 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
           render={({ field }) => (
             <AmountInput
               label="Amount"
-              unit={pair?.baseAsset}
+              unit={activePair?.baseAsset}
               value={field.value}
               onChange={field.onChange}
               step={0.0001}
@@ -206,7 +205,7 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
       <AccountInfo side={side} />
 
       <Button
-        disabled={submitOrderMutation.isPending || !pair || !balance}
+        disabled={submitOrderMutation.isPending || !activePair || !balance}
         type="submit"
         variant={side === 'buy' ? 'default' : 'destructive'}
         className={cn('w-full mt-8 font-normal cursor-pointer')}

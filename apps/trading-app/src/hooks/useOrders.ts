@@ -8,7 +8,6 @@ export const useOrders = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.ORDERS],
     queryFn: async () => {
-      console.log('refetching orders from store');
       const defaultStore = getDefaultStore();
       return Promise.resolve(defaultStore.get(_ordersAtom));
     },

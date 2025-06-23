@@ -1,4 +1,5 @@
 'use client';
+import { useAtomValue } from 'jotai';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 
@@ -15,12 +16,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useActiveTradingPairInfo } from '@/hooks/useActiveTradingPairInfo';
-import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
+import { activeTradingPairInfoAtom, allTradingPairsAtom } from '@/state/atoms';
 
 export const CoinInfo = () => {
-  const { data: activeTradingPair } = useActiveTradingPairInfo();
-  const { data: allTradingPairs } = useAllTradingPairs();
+  const activeTradingPair = useAtomValue(activeTradingPairInfoAtom);
+  const { data: allTradingPairs } = useAtomValue(allTradingPairsAtom);
   const [isOpen, setIsOpen] = useState(false);
 
   return (

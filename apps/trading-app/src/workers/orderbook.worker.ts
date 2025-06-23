@@ -8,24 +8,50 @@ export type AggregatedLevel = {
   total: number; // amount * price
 };
 
+type AggregationResult = {
+  levels: AggregatedLevel[];
+  bestPrice: number | null;
+};
+
+export type OrderbookResult = {
+  bids: AggregatedLevel[];
+  asks: AggregatedLevel[];
+  bestBid: number | null;
+  bestAsk: number | null;
+  mid: number;
+};
+
 /*
  * Aggregates levels by tick size and sorts them.
+ * Also returns the best price from original data.
  * - For bids, it rounds down to the nearest tick size.
  * - For asks, it rounds up to the nearest tick size.
- * - Returns the top 20 levels.
+ * - Returns the top 20 levels and best original price.
  * @param levels - Array of levels to aggregate.
  * @param side - 'bids' or 'asks'.
  * @param tickSize - The tick size to use for aggregation.
  * @param descending - Whether to sort in descending order (bids) or ascending order (asks).
- * @returns An array of aggregated levels, each with price, amount, and total.
+ * @returns An object with aggregated levels and best price from original data.
  */
-function aggregateAndSort(levels: Level[], side: Side, tickSize: number, descending: boolean): AggregatedLevel[] {
+function aggregateAndSort(levels: Level[], side: Side, tickSize: number, descending: boolean): AggregationResult {
   const bucketMap = new Map<number, number>();
+  let bestPrice: number | null = null;
 
   for (const [priceStr, amountStr] of levels) {
     const price = parseFloat(priceStr);
     const amount = parseFloat(amountStr);
     if (isNaN(price) || isNaN(amount) || price <= 0 || amount <= 0) continue;
+
+    // Track best price from original data
+    if (bestPrice === null) {
+      bestPrice = price;
+    } else {
+      if (side === 'bids' && price > bestPrice) {
+        bestPrice = price;
+      } else if (side === 'asks' && price < bestPrice) {
+        bestPrice = price;
+      }
+    }
 
     const bucketPrice =
       side === 'bids' ? Math.floor(price / tickSize) * tickSize : Math.ceil(price / tickSize) * tickSize;
@@ -42,16 +68,17 @@ function aggregateAndSort(levels: Level[], side: Side, tickSize: number, descend
     .sort((a, b) => (descending ? b.price - a.price : a.price - b.price))
     .slice(0, 20);
 
-  return sorted;
+  return {
+    levels: sorted,
+    bestPrice,
+  };
 }
 
 self.onmessage = (event) => {
   const { bids, asks, tickSize } = event.data;
-  const aggregatedBids = aggregateAndSort(bids, 'bids', tickSize, true);
-  const aggregatedAsks = aggregateAndSort(asks, 'asks', tickSize, false);
 
-  const bestBid = aggregatedBids[0]?.price ?? null;
-  const bestAsk = aggregatedAsks[0]?.price ?? null;
+  const { levels: aggregatedBids, bestPrice: bestBid } = aggregateAndSort(bids, 'bids', tickSize, true);
+  const { levels: aggregatedAsks, bestPrice: bestAsk } = aggregateAndSort(asks, 'asks', tickSize, false);
 
   let mid: number | null = null;
   if (bestBid !== null && bestAsk !== null) {
@@ -61,8 +88,10 @@ self.onmessage = (event) => {
   self.postMessage({
     bids: aggregatedBids,
     asks: aggregatedAsks,
+    bestBid,
+    bestAsk,
     mid,
-  });
+  } as OrderbookResult);
 };
 
 self.onerror = (err) => {

@@ -19,7 +19,7 @@ const mockAdapter = {
   subscribeKlines: vi.fn(),
   unsubscribeKlines: vi.fn(),
   getSupportedTradingPairs: vi.fn(),
-  subscribeOrderBook: vi.fn(),
+  subscribeOrderbook: vi.fn(),
   placeOrder: vi.fn(),
   setupTradingPairs: vi.fn(),
 };

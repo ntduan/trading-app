@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { type AggregatedLevel } from '@/workers/orderbook.worker';
 
-export const OrderBookRow = React.memo(
+export const OrderbookRow = React.memo(
   function OrderbookRow({
     level,
     maxTotal,

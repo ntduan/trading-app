@@ -4,13 +4,14 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
-import { activeTradingPairAtom } from '@/state/atoms';
+import { useOrderbookSubscription } from '@/hooks/useOrderbook';
+import { activeTradingPairSymbolAtom } from '@/state/atoms';
 
-export function TradingPairCheck() {
+export function TradeUpdater() {
   const { data: pairs, isLoading } = useAllTradingPairs();
   const router = useRouter();
   const { symbol } = useParams();
-  const setActiveTradingPair = useSetAtom(activeTradingPairAtom);
+  const setActiveTradingPair = useSetAtom(activeTradingPairSymbolAtom);
 
   useEffect(() => {
     if (isLoading || !symbol) {
@@ -24,6 +25,8 @@ export function TradingPairCheck() {
       setActiveTradingPair(pair.symbol);
     }
   }, [symbol, pairs, isLoading, router, setActiveTradingPair]);
+
+  useOrderbookSubscription();
 
   return null;
 }

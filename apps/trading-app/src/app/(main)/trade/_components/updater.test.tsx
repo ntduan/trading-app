@@ -2,7 +2,7 @@
 import { render } from '@testing-library/react';
 import { describe, it, vi, beforeEach, expect } from 'vitest';
 
-import { TradingPairCheck } from './trading-pair-check';
+import { TradingPairCheck } from './updater';
 
 import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
 

@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 
 import { useAllTradingPairs } from './useAllTradingPairs';
 
-import { activeTradingPairAtom } from '@/state/atoms';
+import { activeTradingPairSymbolAtom } from '@/state/atoms';
 
 export const useActiveTradingPairInfo = () => {
-  const [activeTradingPairSymbol] = useAtom(activeTradingPairAtom);
+  const [activeTradingPairSymbol] = useAtom(activeTradingPairSymbolAtom);
   const { data: allPairs, isLoading, error } = useAllTradingPairs();
 
   const activeTradingPair = useMemo(() => {

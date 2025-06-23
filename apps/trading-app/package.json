@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "ln -sf ../../../packages/tv-charting-library ./public/charting_library",
+    "postinstall": "rm -rf public/charting_library && cp -R ../../packages/tv-charting-library ./public/charting_library",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

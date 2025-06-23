@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { enqueueSnackbar } from 'notistack';
 import { useMemo } from 'react';
 
@@ -9,29 +9,16 @@ import { DataTable, DataTableRow, EmptyState } from '../data-table/data-table';
 
 import { Button } from '@/components/ui/button';
 import { QUERY_KEYS } from '@/constants';
-import { useActiveTradingPairInfo } from '@/hooks/useActiveTradingPairInfo';
 import { useOrders } from '@/hooks/useOrders';
-import { cn } from '@/lib/utils';
-import { _cancelOrderAtom } from '@/state/atoms';
+import { cn, formatAmount, formatDate, formatPrice } from '@/lib/utils';
+import { _cancelOrderAtom, activeTradingPairInfoAtom, enhanceOrdersAtom } from '@/state/atoms';
 
 export const Orders = () => {
   const { data: allOrders } = useOrders();
-  const { data: activeTradingPair } = useActiveTradingPairInfo();
+  const activeTradingPair = useAtomValue(activeTradingPairInfoAtom);
   const queryClient = useQueryClient();
   const cancelOrder = useSetAtom(_cancelOrderAtom);
-
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
-  };
-
-  const formatPrice = (price: number) => price.toFixed(2);
-  const formatAmount = (amount: number) => amount.toFixed(4);
+  const enhanceOrders = useAtomValue(enhanceOrdersAtom);
 
   const cancelOrderMutation = useMutation({
     mutationFn: async (orderId: string) => {
@@ -77,35 +64,23 @@ export const Orders = () => {
   };
 
   const columns = useMemo(
-    () => [
-      'Order No.',
-      'Date',
-      'Pair',
-      'Side',
-      `Price (${activeTradingPair?.quoteAsset})`,
-      `Amount (${activeTradingPair?.baseAsset})`,
-      `Executed (${activeTradingPair?.baseAsset})`,
-      `Total (${activeTradingPair?.quoteAsset})`,
-      'Status',
-      'Actions',
-    ],
-    [activeTradingPair]
+    () => ['Order No.', 'Date', 'Pair', 'Side', `Price`, `Amount`, `Executed `, `Total `, 'Status', 'Actions'],
+    []
   );
 
   const orders = useMemo(
     () =>
-      allOrders
-        ?.filter((item) => {
-          return item.pair === activeTradingPair?.symbol;
-        })
-        .slice()
+      enhanceOrders(allOrders)
+        ?.slice()
         .sort((a, b) => b.createdAt - a.createdAt) || [],
-    [activeTradingPair?.symbol, allOrders]
+    [allOrders, enhanceOrders]
   );
+
+  console.log('Orders:', orders);
 
   return (
     <DataTable columns={columns} emptyStateMessage="No orders.">
-      {!orders || orders?.length === 0 ? (
+      {!orders || orders?.length === 0 || !activeTradingPair ? (
         <EmptyState message="You have no orders." />
       ) : (
         orders.map((order) => (
@@ -123,10 +98,18 @@ export const Orders = () => {
                 {order.side.toUpperCase()}
               </span>
             </div>
-            <div className="font-mono">{formatPrice(order.price)}</div>
-            <div className="font-mono">{formatAmount(order.amount)}</div>
-            <div className="font-mono">{order.status === 'filled' ? formatAmount(order.amount) : '0.0000'}</div>
-            <div className="font-mono">{formatPrice(order.price * order.amount)}</div>
+            <div className="font-mono">
+              {formatPrice(order.price)} ({order?.quoteAsset})
+            </div>
+            <div className="font-mono">
+              {formatAmount(order.amount)} ({order?.baseAsset})
+            </div>
+            <div className="font-mono">
+              {order.status === 'filled' ? formatAmount(order.amount) : '0.0000'} ({order?.baseAsset})
+            </div>
+            <div className="font-mono">
+              {formatPrice(order.price * order.amount)} ({order?.quoteAsset})
+            </div>
             <div>
               <span
                 className={cn(
