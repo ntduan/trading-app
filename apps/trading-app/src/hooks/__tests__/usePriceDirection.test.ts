@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { usePriceDirection } from './usePriceDirection';
+import { usePriceDirection } from '../usePriceDirection';
 
 describe('usePriceDirection', () => {
   it('should return null initially', () => {

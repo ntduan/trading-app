@@ -4,7 +4,7 @@ import { getDefaultStore } from 'jotai';
 import React from 'react';
 import { vi, expect, describe, it, type Mock } from 'vitest';
 
-import { useUserBalance } from './useUserBalance';
+import { useUserBalance } from '../useUserBalance';
 
 import { _amountAtom } from '@/state/atoms';
 

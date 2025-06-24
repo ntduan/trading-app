@@ -4,7 +4,7 @@ import { renderHook } from '@testing-library/react';
 import * as jotai from 'jotai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useOrders } from './useOrders';
+import { useOrders } from '../useOrders';
 
 import { QUERY_KEYS } from '@/constants';
 

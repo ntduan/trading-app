@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
-import { useIsDesktop } from './useIsDesktop';
+import { useIsDesktop } from '../useIsDesktop';
 
 // Mock usehooks-ts module
 vi.mock('usehooks-ts', () => ({

@@ -1,7 +1,7 @@
 import type { Bar, LibrarySymbolInfo, ResolutionString } from 'tv-charting-library';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { Datafeed } from './data-feed';
+import { Datafeed } from '../data-feed';
 
 const mockBars: Bar[] = [
   { time: 1000, close: 10, open: 9, high: 11, low: 8, volume: 100 },

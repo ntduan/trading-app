@@ -3,7 +3,7 @@ import { Provider } from 'jotai';
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { useExchangeAdapter } from './useExchangeAdapter';
+import { useExchangeAdapter } from '../useExchangeAdapter';
 
 import * as binanceModule from '@/adapters/binance';
 import type * as createExchangeAdapterModule from '@/adapters/createExchangeAdapter';
