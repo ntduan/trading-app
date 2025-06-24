@@ -1,17 +1,19 @@
 'use client';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
 import { useOrderbookSubscription } from '@/hooks/useOrderbook';
-import { activeTradingPairSymbolAtom } from '@/state/atoms';
+import { activeTradingPairSymbolAtom, baseActiveTradingPairSymbolAtom, tickSizeAtom } from '@/state/atoms';
 
 export function TradeUpdater() {
   const { data: pairs, isLoading } = useAllTradingPairs();
   const router = useRouter();
   const { symbol } = useParams();
   const setActiveTradingPair = useSetAtom(activeTradingPairSymbolAtom);
+  const setBaseActiveTradingPair = useSetAtom(baseActiveTradingPairSymbolAtom);
+  const tickSize = useAtomValue(tickSizeAtom);
 
   useEffect(() => {
     if (isLoading || !symbol) {
@@ -23,10 +25,11 @@ export function TradeUpdater() {
       router.push('/404');
     } else {
       setActiveTradingPair(pair.symbol);
+      setBaseActiveTradingPair(pair.symbol);
     }
-  }, [symbol, pairs, isLoading, router, setActiveTradingPair]);
+  }, [symbol, pairs, isLoading, router, setActiveTradingPair, setBaseActiveTradingPair]);
 
-  useOrderbookSubscription();
+  useOrderbookSubscription(tickSize);
 
   return null;
 }

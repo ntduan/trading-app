@@ -16,8 +16,9 @@ type AggregationResult = {
 export type OrderbookResult = {
   bids: AggregatedLevel[];
   asks: AggregatedLevel[];
-  bestBid: number | null;
-  bestAsk: number | null;
+  symbol: string;
+  bestBid: number;
+  bestAsk: number;
   mid: number;
 };
 
@@ -75,7 +76,7 @@ function aggregateAndSort(levels: Level[], side: Side, tickSize: number, descend
 }
 
 self.onmessage = (event) => {
-  const { bids, asks, tickSize } = event.data;
+  const { bids, asks, tickSize, symbol } = event.data;
 
   const { levels: aggregatedBids, bestPrice: bestBid } = aggregateAndSort(bids, 'bids', tickSize, true);
   const { levels: aggregatedAsks, bestPrice: bestAsk } = aggregateAndSort(asks, 'asks', tickSize, false);
@@ -88,6 +89,7 @@ self.onmessage = (event) => {
   self.postMessage({
     bids: aggregatedBids,
     asks: aggregatedAsks,
+    symbol,
     bestBid,
     bestAsk,
     mid,

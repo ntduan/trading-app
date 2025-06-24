@@ -30,7 +30,7 @@ export const getWorkerAtom = atom(
 // post message to worker
 export const postToWorkerAtom = atom(
   null,
-  (get, set, data: { bids: [string, string][]; asks: [string, string][]; tickSize: number }) => {
+  (get, set, data: { symbol: string; bids: [string, string][]; asks: [string, string][]; tickSize: number }) => {
     const worker = set(getWorkerAtom);
     worker.postMessage(data);
   }

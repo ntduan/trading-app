@@ -7,6 +7,10 @@ import { type Order, type CancelOrderParams, type EnhancedOrder } from './types'
 
 import { STORAGE_KEYS } from '@/constants';
 
+export const tickSizeAtom = atomWithStorage<number>(STORAGE_KEYS.TICK_SIZE, 0.01, undefined, {
+  getOnInit: true,
+});
+
 const baseOrdersAtom = atomWithStorage<Order[]>(STORAGE_KEYS.ORDERS || 'orders', [], undefined, { getOnInit: true });
 
 // ========================================

@@ -1,9 +1,9 @@
 'use client';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { enqueueSnackbar } from 'notistack';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { AmountInput } from '../amount-input/amount-input';
@@ -15,11 +15,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { QUERY_KEYS } from '@/constants';
 import { useUserBalance } from '@/hooks/useUserBalance';
 import { cn } from '@/lib/utils';
-import { _amountAtom, _ordersAtom, activeTradingPairInfoAtom, type Order } from '@/state/atoms';
+import { _amountAtom, _ordersAtom, activeTradingPairInfoAtom, orderbookAtom, type Order } from '@/state/atoms';
 
 type LimitFormFormProps = {
   side: 'buy' | 'sell';
   onSubmit?: (data: { price: string; amount: string; postOnly: boolean; side: 'buy' | 'sell' }) => void;
+  symbol: string;
 };
 
 type FormData = {
@@ -34,9 +35,10 @@ const isValidNumber = (value: string) => {
   return !isNaN(num) && isFinite(num);
 };
 
-export const LimitForm = ({ side }: LimitFormFormProps) => {
+export const LimitForm = ({ symbol, side }: LimitFormFormProps) => {
+  const store = useStore();
   const activePair = useAtomValue(activeTradingPairInfoAtom);
-  const { data: balance, refetch } = useUserBalance();
+  const { data: balance } = useUserBalance();
   const updateAmount = useSetAtom(_amountAtom);
   const addOrder = useSetAtom(_ordersAtom);
   const queryClient = useQueryClient();
@@ -44,7 +46,6 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
   const {
     control,
     handleSubmit,
-    register,
     watch,
     reset,
     formState: { errors },
@@ -78,6 +79,22 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
 
       if (!activePair || !balance) {
         throw new Error('Missing activePair or balance data');
+      }
+
+      const orderbook = store.get(orderbookAtom);
+
+      if (!orderbook) {
+        throw new Error('orderbook not initialized');
+      }
+
+      // Post-only logic: only allow maker orders
+      if (data.postOnly) {
+        if ((side === 'buy' && price >= orderbook.bestAsk) || (side === 'sell' && price <= orderbook.bestBid)) {
+          enqueueSnackbar('Post-only limit price must not match the current market. Please adjust your price.', {
+            variant: 'warning',
+          });
+          throw new Error('Post-only limit price must not match the current market');
+        }
       }
 
       if (side === 'buy') {
@@ -121,7 +138,7 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_BALANCE] });
-      reset();
+      reset({ amount: '' }, { keepValues: true });
       console.log('Order submitted successfully:', data);
       enqueueSnackbar('Limit order placed successfully', {
         variant: 'success',
@@ -135,6 +152,20 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
   const internalSubmit = (data: FormData) => {
     submitOrderMutation.mutate(data);
   };
+
+  useEffect(() => {
+    const unsubscribe = store.sub(orderbookAtom, () => {
+      const result = store.get(orderbookAtom);
+      if (result && result.symbol === symbol) {
+        console.log('Orderbook updated for symbol:', symbol, Number(result.mid.toFixed(2)).toString());
+
+        reset({
+          price: Number(result.mid.toFixed(2)).toString(),
+        });
+        unsubscribe();
+      }
+    });
+  }, [reset, store, symbol]);
 
   return (
     <form onSubmit={handleSubmit(internalSubmit)} className="flex flex-col gap-4 flex-1">
@@ -196,7 +227,11 @@ export const LimitForm = ({ side }: LimitFormFormProps) => {
 
       {/* Post-only */}
       <div className="flex items-center space-x-2">
-        <Checkbox id="postOnly" {...register('postOnly')} />
+        <Controller
+          name="postOnly"
+          control={control}
+          render={({ field }) => <Checkbox id="postOnly" checked={field.value} onCheckedChange={field.onChange} />}
+        />
         <label htmlFor="postOnly" className="text-sm text-white">
           Post-only
         </label>

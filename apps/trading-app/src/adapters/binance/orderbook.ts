@@ -78,6 +78,7 @@ export function subscribeOrderbook(symbol: string, onRealtimeCallback: (bids: Ra
   });
 
   fetchSnapshot(symbol).then((snapshot) => {
+    console.log('[Orderbook] Initial snapshot loaded', snapshot);
     for (const [price, size] of snapshot.bids) bids.set(price, size);
     for (const [price, size] of snapshot.asks) asks.set(price, size);
     lastUpdateId = snapshot.lastUpdateId;

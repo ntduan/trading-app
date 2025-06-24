@@ -1,19 +1,20 @@
 'use client';
 
+import { useAtomValue } from 'jotai';
 import { SnackbarProvider } from 'notistack';
 import { useState } from 'react';
 
 import { LimitOrder } from '@/components/limit-order/limit-order';
-import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
+import { activeTradingPairSymbolAtom } from '@/state/atoms';
 
 export const OrderContainer = () => {
   const [activeTab, setActiveTab] = useState('Spot');
   const [loadedTabs, setLoadedTabs] = useState(new Set(['Spot']));
+  const activeTradingPairSymbol = useAtomValue(activeTradingPairSymbolAtom);
 
-  /* v8 ignore next 4 */
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setLoadedTabs((prev) => new Set([...prev, value]));
@@ -37,7 +38,7 @@ export const OrderContainer = () => {
         </div>
         <div className="relative h-full">
           <div className={cn('h-full', `${/* v8 ignore next line */ activeTab === 'Spot' ? 'block' : 'hidden'}`)}>
-            {loadedTabs.has('Spot') && <LimitOrder bestAsk={100} bestBid={90} />}
+            {loadedTabs.has('Spot') && <LimitOrder symbol={activeTradingPairSymbol} />}
           </div>
         </div>
       </Card>

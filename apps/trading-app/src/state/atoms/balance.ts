@@ -7,7 +7,7 @@ import { STORAGE_KEYS } from '@/constants';
 
 // Base storage atoms (private)
 const INIT_AMOUNT: Record<string, number> = {
-  USDT: 100000,
+  USDT: 1000000,
   BTC: 0,
   ETH: 0,
   SOL: 0,

@@ -23,9 +23,11 @@ export const allTradingPairsAtom = atomWithQuery(() => ({
 // Trading Pair Atoms
 // ========================================
 
-export const activeTradingPairSymbolAtom = atomWithStorage(STORAGE_KEYS.ACTIVE_TRADING_PAIR, 'BTCUSDT', undefined, {
+export const baseActiveTradingPairSymbolAtom = atomWithStorage(STORAGE_KEYS.ACTIVE_TRADING_PAIR, 'BTCUSDT', undefined, {
   getOnInit: true,
 });
+
+export const activeTradingPairSymbolAtom = atom('');
 
 // ========================================
 // Derived Trading Pair Atoms

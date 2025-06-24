@@ -2,6 +2,7 @@ export const STORAGE_KEYS = {
   ACTIVE_TRADING_PAIR: 'active_trading_pair',
   AMOUNT: 'amount',
   ORDERS: 'orders',
+  TICK_SIZE: 'tick_size',
 };
 
 export const QUERY_KEYS = {

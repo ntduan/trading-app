@@ -1,12 +1,11 @@
 'use client';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { redirect } from 'next/navigation';
 
-import { activeTradingPairSymbolAtom } from '@/state/atoms';
+import { baseActiveTradingPairSymbolAtom } from '@/state/atoms';
 
 export default function TradeRootPage() {
-  const [activeTradingPair] = useAtom(activeTradingPairSymbolAtom);
-
-  const targetSymbol = activeTradingPair || 'BTCUSDT';
+  const baseActiveTradingPairSymbol = useAtomValue(baseActiveTradingPairSymbolAtom);
+  const targetSymbol = baseActiveTradingPairSymbol;
   redirect(`/trade/${targetSymbol}`);
 }

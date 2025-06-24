@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { useTheme } from 'next-themes';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   type IChartingLibraryWidget,
   type ResolutionString,
@@ -34,16 +34,12 @@ export function useTradingViewChart() {
   const isDesktop = useIsDesktop();
   const { theme } = useTheme();
   const activeSymbol = useAtomValue(activeTradingPairSymbolAtom);
-  // const { multiplexer, reconnectCounter } = useWebSocketStatus();
   const { adapter } = useExchangeAdapter();
-
   const [datafeed] = useState(() => new Datafeed(adapter));
 
   const [isChartReady, setIsChartReady] = useState(false); // TV widget initialized
   const [isDataLoaded, setIsDataLoaded] = useState(false); // Chart data loaded
   const [chartWidget, setChartWidget] = useState<IChartingLibraryWidget | null>(null);
-
-  const handleSymbolChange = useCallback((symbol: string) => {}, []);
 
   // Create TradingView widget
   useEffect(() => {
@@ -92,7 +88,7 @@ export function useTradingViewChart() {
     });
 
     setChartWidget(widget);
-  }, [chartWidget, handleSymbolChange, isDesktop, theme, isChartReady, datafeed, activeSymbol]);
+  }, [chartWidget, isDesktop, theme, isChartReady, datafeed, activeSymbol]);
 
   useEffect(() => {
     if (!chartWidget || isChartReady) return;
@@ -110,27 +106,6 @@ export function useTradingViewChart() {
 
     chartWidget.subscribe('chart_loaded', () => setIsChartReady(true));
   }, [chartWidget, isChartReady]);
-
-  // Update cached mid price for active coin
-  /*useEffect(() => {
-    setCachedSymbolInfo((prevRaw) => {
-      // const [cachedCoin, cachedMid] = JSON.parse(prevRaw);
-      // if (cachedCoin !== activeCoin || !cachedMid) {
-      //   const mid = getMidPriceFromData(activeCoin, activeWebData);
-      //   const updated = JSON.stringify([activeCoin, mid]);
-      //   localStorage.setItem('SYMBOL_CACHE', updated);
-      //   return updated;
-      // }
-      return prevRaw;
-    });
-  }, [activeCoin]);
-
-  // Reset chart data after reconnect
-  useEffect(() => {
-    if (!chartWidget || !isChartReady) return;
-    // clearWidgetCache(); // optional helper
-    chartWidget.activeChart().resetData();
-  }, [reconnectCounter]);*/
 
   // Update TradingView symbol when activeCoin changes
   useEffect(() => {

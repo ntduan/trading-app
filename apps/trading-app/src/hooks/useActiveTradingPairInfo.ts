@@ -1,4 +1,4 @@
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
 import { useAllTradingPairs } from './useAllTradingPairs';
@@ -6,7 +6,7 @@ import { useAllTradingPairs } from './useAllTradingPairs';
 import { activeTradingPairSymbolAtom } from '@/state/atoms';
 
 export const useActiveTradingPairInfo = () => {
-  const [activeTradingPairSymbol] = useAtom(activeTradingPairSymbolAtom);
+  const activeTradingPairSymbol = useAtomValue(activeTradingPairSymbolAtom);
   const { data: allPairs, isLoading, error } = useAllTradingPairs();
 
   const activeTradingPair = useMemo(() => {

@@ -3,7 +3,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useExchangeAdapter } from './useExchangeAdapter';
 
-import { orderbookAtom, postToWorkerAtom, getWorkerAtom, activeTradingPairInfoAtom } from '@/state/atoms';
+import {
+  activeTradingPairInfoAtom,
+  activeTradingPairSymbolAtom,
+  getWorkerAtom,
+  orderbookAtom,
+  postToWorkerAtom,
+} from '@/state/atoms';
 import { type OrderbookResult } from '@/workers/orderbook.worker';
 
 // initializing the worker
@@ -18,8 +24,8 @@ export function useOrderbookWorker() {
 
   return {
     post: useCallback(
-      (bids: [string, string][], asks: [string, string][], tickSize: number) => {
-        post({ bids, asks, tickSize });
+      (symbol: string, bids: [string, string][], asks: [string, string][], tickSize: number) => {
+        post({ symbol, bids, asks, tickSize });
       },
       [post]
     ),
@@ -55,14 +61,23 @@ export function useOrderbook() {
 }
 
 // get the real-time orderbook snapshot
-export function useOrderbookSnapshot() {
+export function useOrderbookSnapshot(symbol: string) {
   const store = useStore();
+  const [orderbook, setOrderbook] = useState<OrderbookResult | null>(null);
 
-  const getSnapshot = useCallback((): OrderbookResult | null => {
-    return store.get(orderbookAtom);
-  }, [store]);
+  useEffect(() => {
+    if (!orderbook || orderbook.symbol !== symbol) {
+      const unsubscribe = store.sub(orderbookAtom, () => {
+        const result = store.get(orderbookAtom);
+        if (result && result.symbol === symbol) {
+          setOrderbook(store.get(orderbookAtom));
+          unsubscribe();
+        }
+      });
+    }
+  }, [orderbook, store, symbol]);
 
-  return getSnapshot;
+  return orderbook;
 }
 
 // useOrderbookSubscription to subscribe to orderbook updates
@@ -75,7 +90,7 @@ export const useOrderbookSubscription = (tickSize: number = 0.01) => {
     if (!activePair) return;
 
     const unsubscribe = adapter.subscribeOrderbook(activePair.symbol, (bids, asks) => {
-      post(bids, asks, tickSize);
+      post(activePair.symbol, bids, asks, tickSize);
     });
 
     return unsubscribe;

@@ -71,9 +71,10 @@ export const Orders = () => {
   const orders = useMemo(
     () =>
       enhanceOrders(allOrders)
+        .filter((order) => order.pair === activeTradingPair?.symbol)
         ?.slice()
         .sort((a, b) => b.createdAt - a.createdAt) || [],
-    [allOrders, enhanceOrders]
+    [activeTradingPair?.symbol, allOrders, enhanceOrders]
   );
 
   return (
