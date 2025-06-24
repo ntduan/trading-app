@@ -8,6 +8,9 @@ export default defineConfig({
     headless: true,
     viewport: { width: 1280, height: 720 },
     ignoreHTTPSErrors: true,
+    video: 'retain-on-failure',
+    screenshot: 'only-on-failure',
+    trace: 'retain-on-failure',
   },
   projects: [
     {
@@ -20,4 +23,5 @@ export default defineConfig({
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },
+  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
 });
