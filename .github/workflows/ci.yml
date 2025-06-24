@@ -36,15 +36,15 @@ jobs:
       - name: Unit Tests
         run: pnpm test
 
+      - name: Change working directory to apps/trading-app
+        working-directory: apps/trading-app
+        run: echo "Changed working directory to apps/trading-app"
+
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
 
       - name: Playwright Tests
         run: pnpm test:e2e
-
-      - name: Change working directory to apps/trading-app
-        working-directory: apps/trading-app
-        run: echo "Changed working directory to apps/trading-app"
 
       - name: Build
         run: pnpm build
