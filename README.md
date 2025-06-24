@@ -1,3 +1,5 @@
+![Vercel Deploy](https://deploy-badge.vercel.app/vercel/trading-gammac)
+
 ## Architecture Diagram
 
 ```mermaid
@@ -90,6 +92,12 @@ This diagram shows the main relationships between pages, components, state manag
 ---
 
 ## Getting Started
+
+Install all dependencies:
+
+```bash
+pnpm install
+```
 
 Run the development server:
 
