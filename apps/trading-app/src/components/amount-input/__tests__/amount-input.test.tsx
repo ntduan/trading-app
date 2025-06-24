@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { AmountInput } from './amount-input';
+import { AmountInput } from '../amount-input';
 import '@testing-library/jest-dom';
 
 describe('AmountInput', () => {

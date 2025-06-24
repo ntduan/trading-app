@@ -3,7 +3,7 @@ import { useTheme } from 'next-themes';
 import React from 'react';
 import { describe, it, vi, beforeEach, afterEach, expect, type Mock } from 'vitest';
 
-import { SwitchTheme } from './switch-theme';
+import { SwitchTheme } from '../switch-theme';
 
 import { useMounted } from '@/hooks/useIsMounted';
 

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { beforeAll, describe, it, expect, vi } from 'vitest';
 
-import { ThemeProvider } from './theme-provider';
+import { ThemeProvider } from '../theme-provider';
 
 describe('ThemeProvider', () => {
   beforeAll(() => {

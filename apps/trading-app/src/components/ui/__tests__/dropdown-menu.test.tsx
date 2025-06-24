@@ -20,7 +20,7 @@ import {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-} from './dropdown-menu';
+} from '../dropdown-menu';
 
 // Mock @radix-ui/react-dropdown-menu
 vi.mock('@radix-ui/react-dropdown-menu', () => {

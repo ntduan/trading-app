@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { getTradingPairs, type TradingPair } from './getTradingPairs';
+import { getTradingPairs, type TradingPair } from '../getTradingPairs';
 
 describe('getTradingPairs', () => {
   it('should return an array of trading pairs', async () => {

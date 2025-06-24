@@ -5,7 +5,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { OrderbookTable } from '../orderbook-table';
 
 // Mock OrderbookRow
-vi.mock('./orderbook-row', () => ({
+vi.mock('../orderbook-row', () => ({
   OrderbookRow: vi.fn(({ level, maxTotal, side }) => (
     <div data-testid="orderbook-row">
       {level.price}-{level.total}-{maxTotal}-{side}

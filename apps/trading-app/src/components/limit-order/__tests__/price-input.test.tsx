@@ -1,7 +1,7 @@
 import { render, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { PriceInput } from './price-input';
+import { PriceInput } from '../price-input';
 
 describe('PriceInput', () => {
   it('renders with default props', () => {

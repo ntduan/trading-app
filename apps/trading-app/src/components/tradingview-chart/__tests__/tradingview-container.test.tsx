@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { vi, describe, it, beforeEach, afterEach, expect } from 'vitest';
 
-import TradingViewContainer from './tradingview-container';
+import TradingViewContainer from '../tradingview-container';
 
 // Mock the useTradingViewChart hook
 vi.mock('@/hooks/useTradingViewChart', () => ({

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { DataTable, DataTableRow, EmptyState } from './data-table';
+import { DataTable, DataTableRow, EmptyState } from '../data-table';
 
 describe('DataTable', () => {
   it('renders columns as header', () => {

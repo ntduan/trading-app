@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { Header } from './header';
+import { Header } from '../header';
 
 // Mock next/link
 vi.mock('next/link', () => ({
@@ -17,7 +17,7 @@ vi.mock('next/link', () => ({
 }));
 
 // Mock NavLink
-vi.mock('./nav-link', () => ({
+vi.mock('../nav-link', () => ({
   NavLink: ({ href, children, className }: React.PropsWithChildren<{ href: string; className?: string }>) => (
     <a href={href} className={className}>
       {children}
@@ -26,7 +26,7 @@ vi.mock('./nav-link', () => ({
 }));
 
 // Mock SwitchTheme
-vi.mock('./switch-theme', () => ({
+vi.mock('../switch-theme', () => ({
   SwitchTheme: () => <button>Switch Theme</button>,
 }));
 

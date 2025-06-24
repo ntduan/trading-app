@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { vi, describe, it, expect } from 'vitest';
 
-import { Input } from './input';
+import { Input } from '../input';
 
 describe('Input', () => {
   it('renders an input element', () => {

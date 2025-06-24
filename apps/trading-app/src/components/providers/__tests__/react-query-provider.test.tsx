@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { ReactQueryProvider } from './react-query-provider';
+import { ReactQueryProvider } from '../react-query-provider';
 
 // Mock QueryClientProvider to check props
 vi.mock('@tanstack/react-query', async (importOriginal) => {

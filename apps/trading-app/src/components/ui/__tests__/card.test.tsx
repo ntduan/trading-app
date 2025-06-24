@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect } from 'vitest';
 
-import { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent } from './card';
+import { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent } from '../card';
 
 describe('Card components', () => {
   it('renders Card with default and custom className', () => {

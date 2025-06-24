@@ -2,7 +2,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { Checkbox } from './checkbox';
+import { Checkbox } from '../checkbox';
 
 describe('Checkbox', () => {
   it('renders without crashing', () => {
