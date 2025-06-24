@@ -23,31 +23,34 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
-
-      - name: Change working directory to apps/trading-app
-        working-directory: apps/trading-app
-        run: echo "Changed working directory to apps/trading-app"
       
       - name: Install dependencies
         run: pnpm install
+        working-directory: apps/trading-app
 
       - name: Lint
         run: pnpm lint
+        working-directory: apps/trading-app
 
       - name: Type Check
         run: pnpm run types-check
+        working-directory: apps/trading-app
 
       - name: Unit Tests
         run: pnpm test
+        working-directory: apps/trading-app
 
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps
+        working-directory: apps/trading-app
 
       - name: Playwright Tests
         run: pnpm test:e2e
+        working-directory: apps/trading-app
 
       - name: Build
         run: pnpm build
+        working-directory: apps/trading-app
 
       - name: Start server and run Lighthouse
         run: |
@@ -57,3 +60,4 @@ jobs:
           npx wait-on http://localhost:3000
           pnpm lighthouse
           kill $SERVER_PID
+        working-directory: apps/trading-app
