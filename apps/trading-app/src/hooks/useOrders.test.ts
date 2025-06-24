@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as reactQuery from '@tanstack/react-query';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import * as jotai from 'jotai';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useOrders } from './useOrders';
 
 import { QUERY_KEYS } from '@/constants';
-import { _ordersAtom } from '@/state/atoms';
 
 vi.mock('jotai', async (importOriginal) => {
   const actual = await importOriginal<any>();

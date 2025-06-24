@@ -30,6 +30,7 @@
       "persistent": true
     },
     "lint-staged": {},
-    "test": {}
+    "test": {},
+    "types-check": {}
   }
 }

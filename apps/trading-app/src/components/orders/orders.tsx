@@ -5,8 +5,6 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { enqueueSnackbar } from 'notistack';
 import { useMemo } from 'react';
 
-import { a } from 'vitest/dist/chunks/suite.d.FvehnV49.js';
-
 import { DataTable, DataTableRow, EmptyState } from '../data-table/data-table';
 
 import { Button } from '@/components/ui/button';

@@ -9,7 +9,7 @@ import {
   type Timezone,
 } from 'tv-charting-library';
 
-import { type IExchangeAdapter } from '@/adapters/createExchangeAdapter';
+import { type IExchangeAdapter } from '@/adapters/types';
 
 const supported_resolutions = ['1', '5', '60', '240', '1D'] as ResolutionString[];
 
@@ -26,11 +26,7 @@ export class Datafeed implements IBasicDataFeed {
     setTimeout(() => callback(config), 0);
   }
 
-  resolveSymbol(
-    symbolName: string,
-    onSymbolResolvedCallback: (symbolInfo: LibrarySymbolInfo) => void,
-    onResolveErrorCallback: (reason: string) => void
-  ): void {
+  resolveSymbol(symbolName: string, onSymbolResolvedCallback: (symbolInfo: LibrarySymbolInfo) => void): void {
     const symbolInfo = {
       name: symbolName,
       ticker: symbolName,

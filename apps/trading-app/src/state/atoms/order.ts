@@ -2,9 +2,8 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 
 import { updateAmountAtom } from './balance';
-import { orderbookAtom } from './orderbook';
 import { allTradingPairsAtom } from './trading-pair';
-import { type Order, type CancelOrderParams, type EnhancedOrder } from './types';
+import { type CancelOrderParams, type EnhancedOrder, type Order } from './types';
 
 import { STORAGE_KEYS } from '@/constants';
 

@@ -1,8 +1,8 @@
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { widget } from 'tv-charting-library';
-import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
-import { useTradingViewChart, getOverrides } from './useTradingViewChart';
+import { getOverrides, useTradingViewChart } from './useTradingViewChart';
 
 import { useActiveTradingPairInfo } from '@/hooks/useActiveTradingPairInfo';
 

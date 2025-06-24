@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAtomValue, useSetAtom, useStore } from 'jotai';
 import { enqueueSnackbar } from 'notistack';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { AmountInput } from '../amount-input/amount-input';

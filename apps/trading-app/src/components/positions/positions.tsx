@@ -4,7 +4,6 @@ import { useMemo } from 'react';
 
 import { DataTable, DataTableRow, EmptyState } from '../data-table/data-table';
 
-import { Button } from '@/components/ui/button';
 import { useOrders } from '@/hooks/useOrders';
 import { cn, formatAmount, formatPrice } from '@/lib/utils';
 

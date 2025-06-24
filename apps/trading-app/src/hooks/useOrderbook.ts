@@ -3,13 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useExchangeAdapter } from './useExchangeAdapter';
 
-import {
-  activeTradingPairInfoAtom,
-  activeTradingPairSymbolAtom,
-  getWorkerAtom,
-  orderbookAtom,
-  postToWorkerAtom,
-} from '@/state/atoms';
+import { activeTradingPairInfoAtom, getWorkerAtom, orderbookAtom, postToWorkerAtom } from '@/state/atoms';
 import { type OrderbookResult } from '@/workers/orderbook.worker';
 
 // initializing the worker

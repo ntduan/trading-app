@@ -6,7 +6,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "prepare": "husky && husky install"
+    "prepare": "husky && husky install",
+    "types-check": "turbo run types-check"
   },
   "keywords": [],
   "author": "",

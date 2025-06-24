@@ -1,6 +1,6 @@
 import { FlatCompat } from '@eslint/eslintrc';
-import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +26,14 @@ const [
 /** @type {import("eslint").Linter.Config[]} */
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
+  {
+    ignores: [
+      '**/*.test.ts',
+      '**/*.test.tsx',
+      '**/*.spec.ts',
+      '**/*.spec.tsx',
+    ],
+  },
   ...compat.extends(
     'next/core-web-vitals',
     'plugin:@typescript-eslint/recommended',

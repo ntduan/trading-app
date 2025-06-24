@@ -2,7 +2,6 @@
 
 import { lazy, Suspense, useState } from 'react';
 
-import { TabsUnderline } from '@/components/tabs-underline/tabs-underline';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
