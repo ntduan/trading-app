@@ -6,7 +6,7 @@ import { DataTable, DataTableRow, EmptyState } from '../data-table/data-table';
 
 import { Button } from '@/components/ui/button';
 import { useOrders } from '@/hooks/useOrders';
-import { cn } from '@/lib/utils';
+import { cn, formatAmount, formatPrice } from '@/lib/utils';
 
 type Position = {
   pair: string;
@@ -31,7 +31,7 @@ export const Positions = () => {
 
     filledOrders.forEach((order) => {
       const existing = positionMap.get(order.pair);
-      const currentMarkPrice = order.price * 1.02; // Mock mark price
+      const currentMarkPrice = order.price;
 
       if (!existing) {
         positionMap.set(order.pair, {
@@ -64,24 +64,10 @@ export const Positions = () => {
     return Array.from(positionMap.values()).filter((pos) => pos.size > 0);
   }, [orders]);
 
-  const formatPrice = (price: number) => price.toFixed(2);
-  const formatAmount = (amount: number) => amount.toFixed(6);
   const formatPnl = (pnl: number) => (pnl >= 0 ? '+' : '') + pnl.toFixed(2);
   const formatPercentage = (percentage: number) => (percentage >= 0 ? '+' : '') + percentage.toFixed(2) + '%';
 
-  const columns = [
-    'Pair',
-    'Side',
-    'Size',
-    'Entry Price',
-    'Mark Price',
-    'PnL',
-    'PnL%',
-    'Margin',
-    'Leverage',
-    'Margin Ratio',
-    'Actions',
-  ];
+  const columns = ['Pair', 'Side', 'Size', 'Entry Price', 'Mark Price', 'PnL', 'PnL%', 'Margin'];
 
   return (
     <DataTable columns={columns} emptyStateMessage="You have no positions.">
@@ -89,13 +75,13 @@ export const Positions = () => {
         <EmptyState message="You have no positions." />
       ) : (
         positions.map((position, index) => (
-          <DataTableRow key={`${position.pair}-${index}`} className="grid-cols-11">
+          <DataTableRow key={`${position.pair}-${index}`} className="grid-cols-8">
             <div className="font-medium">{position.pair}</div>
             <div>
               <span
                 className={cn(
                   'px-1.5 py-0.5 rounded text-xs font-medium',
-                  position.side === 'buy' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                  position.side === 'buy' ? 'bg-green-500/20 text-chart-2' : 'bg-red-500/20 text-chart-1'
                 )}
               >
                 {position.side.toUpperCase()}
@@ -104,24 +90,13 @@ export const Positions = () => {
             <div className="font-mono">{formatAmount(position.size)}</div>
             <div className="font-mono">{formatPrice(position.entryPrice)}</div>
             <div className="font-mono">{formatPrice(position.markPrice)}</div>
-            <div className={cn('font-mono', position.pnl >= 0 ? 'text-green-400' : 'text-red-400')}>
+            <div className={cn('font-mono', position.pnl >= 0 ? 'text-chart-2' : 'text-chart-1')}>
               {formatPnl(position.pnl)}
             </div>
-            <div className={cn('font-mono', position.pnlPercentage >= 0 ? 'text-green-400' : 'text-red-400')}>
+            <div className={cn('font-mono', position.pnlPercentage >= 0 ? 'text-chart-2' : 'text-chart-1')}>
               {formatPercentage(position.pnlPercentage)}
             </div>
             <div className="font-mono">{formatPrice(position.margin)}</div>
-            <div className="font-mono">{position.leverage}x</div>
-            <div className="font-mono text-green-400">12.5%</div>
-            <div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-6 px-2 text-xs text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
-              >
-                Close
-              </Button>
-            </div>
           </DataTableRow>
         ))
       )}

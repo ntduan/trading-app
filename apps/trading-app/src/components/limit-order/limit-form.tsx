@@ -127,9 +127,9 @@ export const LimitForm = ({ symbol, side }: LimitFormFormProps) => {
         const newBalance = { ...balance };
         if (side === 'buy') {
           const totalCost = price * amount;
-          newBalance[activePair.quoteAsset] = Math.max(0, newBalance[activePair.quoteAsset] - totalCost);
+          newBalance[activePair.quoteAsset] = newBalance[activePair.quoteAsset] - totalCost;
         } else {
-          newBalance[activePair.baseAsset] = Math.max(0, newBalance[activePair.baseAsset] - amount);
+          newBalance[activePair.baseAsset] = newBalance[activePair.baseAsset] - amount;
         }
 
         updateAmount(newBalance);

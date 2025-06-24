@@ -5,10 +5,13 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { enqueueSnackbar } from 'notistack';
 import { useMemo } from 'react';
 
+import { a } from 'vitest/dist/chunks/suite.d.FvehnV49.js';
+
 import { DataTable, DataTableRow, EmptyState } from '../data-table/data-table';
 
 import { Button } from '@/components/ui/button';
 import { QUERY_KEYS } from '@/constants';
+import { useOrderbook } from '@/hooks/useOrderbook';
 import { useOrders } from '@/hooks/useOrders';
 import { cn, formatAmount, formatDate, formatPrice } from '@/lib/utils';
 import { _cancelOrderAtom, activeTradingPairInfoAtom, enhanceOrdersAtom } from '@/state/atoms';
@@ -19,6 +22,7 @@ export const Orders = () => {
   const queryClient = useQueryClient();
   const cancelOrder = useSetAtom(_cancelOrderAtom);
   const enhanceOrders = useAtomValue(enhanceOrdersAtom);
+  const orderbook = useOrderbook();
 
   const cancelOrderMutation = useMutation({
     mutationFn: async (orderId: string) => {
@@ -64,8 +68,18 @@ export const Orders = () => {
   };
 
   const columns = useMemo(
-    () => ['Order No.', 'Date', 'Pair', 'Side', `Price`, `Amount`, `Executed `, `Total `, 'Status', 'Actions'],
-    []
+    () => [
+      'Order No.',
+      'Date',
+      'Pair',
+      'Side',
+      `Price (${activeTradingPair?.quoteAsset || '--'})`,
+      `Amount (${activeTradingPair?.baseAsset || '--'})`,
+      `Unrealized PnL (${activeTradingPair?.quoteAsset || '--'})`,
+      'Status',
+      'Actions',
+    ],
+    [activeTradingPair]
   );
 
   const orders = useMemo(
@@ -77,13 +91,27 @@ export const Orders = () => {
     [activeTradingPair?.symbol, allOrders, enhanceOrders]
   );
 
+  const ordersWithPnl = useMemo(() => {
+    const midPrice = orderbook?.mid;
+    if (!midPrice) return orders;
+    return orders.map((order) => {
+      if (order.status !== 'pending') return order;
+      const unrealizedPnl =
+        order.side === 'buy' ? (midPrice - order.price) * order.amount : (order.price - midPrice) * order.amount;
+      return {
+        ...order,
+        unrealizedPnl: unrealizedPnl.toFixed(2),
+      };
+    });
+  }, [orders, orderbook]);
+
   return (
     <DataTable columns={columns} emptyStateMessage="No orders.">
       {!orders || orders?.length === 0 || !activeTradingPair ? (
         <EmptyState message="You have no orders." />
       ) : (
-        orders.map((order) => (
-          <DataTableRow key={order.id} className="grid-cols-10">
+        ordersWithPnl.map((order) => (
+          <DataTableRow key={order.id} className="grid-cols-9">
             <div className="font-mono text-muted-foreground">{order.id.slice(-7)}</div>
             <div>{formatDate(order.createdAt)}</div>
             <div className="font-medium">{order.pair}</div>
@@ -97,18 +125,9 @@ export const Orders = () => {
                 {order.side.toUpperCase()}
               </span>
             </div>
-            <div className="font-mono">
-              {formatPrice(order.price)} ({order?.quoteAsset})
-            </div>
-            <div className="font-mono">
-              {formatAmount(order.amount)} ({order?.baseAsset})
-            </div>
-            <div className="font-mono">
-              {order.status === 'filled' ? formatAmount(order.amount) : '0.0000'} ({order?.baseAsset})
-            </div>
-            <div className="font-mono">
-              {formatPrice(order.price * order.amount)} ({order?.quoteAsset})
-            </div>
+            <div className="font-mono">{formatPrice(order.price)}</div>
+            <div className="font-mono">{formatAmount(order.amount)}</div>
+            <div className="font-mono">{order.unrealizedPnl}</div>
             <div>
               <span
                 className={cn(

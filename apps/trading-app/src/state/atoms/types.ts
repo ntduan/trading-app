@@ -27,4 +27,5 @@ export type CancelOrderParams = {
 export type EnhancedOrder = Order & {
   baseAsset: string;
   quoteAsset: string;
+  unrealizedPnl?: number;
 };

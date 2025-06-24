@@ -8,9 +8,9 @@ import { STORAGE_KEYS } from '@/constants';
 // Base storage atoms (private)
 const INIT_AMOUNT: Record<string, number> = {
   USDT: 1000000,
-  BTC: 0,
-  ETH: 0,
-  SOL: 0,
+  BTC: 100,
+  ETH: 100,
+  SOL: 100,
 };
 
 const baseAmountAtom = atomWithStorage<Record<string, number>>(STORAGE_KEYS.AMOUNT, INIT_AMOUNT, undefined, {

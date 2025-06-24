@@ -2,6 +2,7 @@ import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
 
 import { updateAmountAtom } from './balance';
+import { orderbookAtom } from './orderbook';
 import { allTradingPairsAtom } from './trading-pair';
 import { type Order, type CancelOrderParams, type EnhancedOrder } from './types';
 
@@ -11,7 +12,9 @@ export const tickSizeAtom = atomWithStorage<number>(STORAGE_KEYS.TICK_SIZE, 0.01
   getOnInit: true,
 });
 
-const baseOrdersAtom = atomWithStorage<Order[]>(STORAGE_KEYS.ORDERS || 'orders', [], undefined, { getOnInit: true });
+export const baseOrdersAtom = atomWithStorage<Order[]>(STORAGE_KEYS.ORDERS || 'orders', [], undefined, {
+  getOnInit: true,
+});
 
 // ========================================
 // Order Management Atoms
