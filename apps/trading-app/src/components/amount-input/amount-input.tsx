@@ -1,13 +1,16 @@
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import React from 'react';
 
-interface AmountInputProps {
+type AmountInputBaseProps = {
   label: string;
   value: string;
   onChange: (value: string) => void;
   step?: number;
   unit?: string;
   maxDecimals?: number;
-}
+};
+
+type AmountInputProps = AmountInputBaseProps & React.HTMLAttributes<HTMLInputElement>;
 
 function limitDecimals(value: string, maxDecimals = 2): string {
   const [intPart, decPart] = value.split('.');
@@ -15,7 +18,15 @@ function limitDecimals(value: string, maxDecimals = 2): string {
   return `${intPart}.${decPart.slice(0, maxDecimals)}`;
 }
 
-export const AmountInput = ({ label, value, onChange, step = 1, unit = '', maxDecimals = 2 }: AmountInputProps) => {
+export const AmountInput = ({
+  label,
+  value,
+  onChange,
+  step = 1,
+  unit = '',
+  maxDecimals = 2,
+  ...spreadProps
+}: AmountInputProps) => {
   const update = (delta: number) => {
     /* v8 ignore next */
     const num = parseFloat(value || '0');
@@ -46,6 +57,7 @@ export const AmountInput = ({ label, value, onChange, step = 1, unit = '', maxDe
           [&::-webkit-inner-spin-button]:appearance-none
           [&::-webkit-outer-spin-button]:appearance-none
           [-moz-appearance:textfield]"
+        {...spreadProps}
       />
 
       <div className="flex items-stretch divide-x divide-border h-10">

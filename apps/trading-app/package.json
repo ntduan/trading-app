@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
+    "test:e2e": "playwright test",
     "lint-staged": "lint-staged",
     "coverage": "vitest run --coverage",
     "types-check": "tsc --noEmit -p tsconfig.test.json"

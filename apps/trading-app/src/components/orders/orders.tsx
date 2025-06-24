@@ -105,12 +105,12 @@ export const Orders = () => {
 
   return (
     <div className="overflow-x-auto">
-      <DataTable columns={columns} emptyStateMessage="No orders." className="min-w-[864px]">
+      <DataTable columns={columns} emptyStateMessage="No orders." className="min-w-[864px]" data-testid="orders-table">
         {!orders || orders?.length === 0 || !activeTradingPair ? (
           <EmptyState message="You have no orders." />
         ) : (
-          ordersWithPnl.map((order) => (
-            <DataTableRow key={order.id} className="grid-cols-9">
+          ordersWithPnl.map((order, index) => (
+            <DataTableRow key={order.id} className="grid-cols-9" data-testid={`order-row-${index + 1}`}>
               <div className="font-mono text-muted-foreground">{order.id.slice(-7)}</div>
               <div>{formatDate(order.createdAt)}</div>
               <div className="font-medium">{order.pair}</div>

@@ -43,7 +43,7 @@ jobs:
         run: pnpm exec playwright install --with-deps
 
       - name: Playwright Tests
-        run: pnpm exec playwright test
+        run: pnpm test:e2e
 
       - name: Lighthouse CI
         run: |

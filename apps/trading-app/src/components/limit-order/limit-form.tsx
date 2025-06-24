@@ -190,6 +190,7 @@ export const LimitForm = ({ symbol, side }: LimitFormFormProps) => {
               onChange={field.onChange}
               step={0.01}
               maxDecimals={2}
+              data-testid={`${side}-price-input`}
             />
           )}
         />
@@ -220,6 +221,7 @@ export const LimitForm = ({ symbol, side }: LimitFormFormProps) => {
               onChange={field.onChange}
               step={0.0001}
               maxDecimals={4}
+              data-testid={`${side}-amount-input`}
             />
           )}
         />
@@ -245,6 +247,7 @@ export const LimitForm = ({ symbol, side }: LimitFormFormProps) => {
         type="submit"
         variant={side === 'buy' ? 'default' : 'destructive'}
         className={cn('w-full mt-8 font-normal cursor-pointer')}
+        data-testid={`${side}-submit-button`}
       >
         {side === 'buy' ? 'Buy' : 'Sell'}
       </Button>

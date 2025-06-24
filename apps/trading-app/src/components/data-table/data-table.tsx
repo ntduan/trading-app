@@ -2,17 +2,19 @@ import { type ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
 
-interface DataTableProps {
+type DataTableBaseProps = {
   columns: string[];
   children: ReactNode;
   emptyStateIcon?: ReactNode;
   emptyStateMessage?: string;
   className?: string;
-}
+};
 
-export const DataTable = ({ columns, children, className }: DataTableProps) => {
+type DataTableProps = DataTableBaseProps & React.HTMLAttributes<HTMLDivElement>;
+
+export const DataTable = ({ columns, children, className, ...spreadProps }: DataTableProps) => {
   return (
-    <div className={cn('p-3 select-none overflow-x-auto', className)}>
+    <div className={cn('p-3 select-none overflow-x-auto', className)} {...spreadProps}>
       {/* Table header */}
       <div className={cn('grid gap-2 text-xs text-muted-foreground mb-2 px-2', `grid-cols-${columns.length}`)}>
         {columns.map((column, index) => (
@@ -28,17 +30,20 @@ export const DataTable = ({ columns, children, className }: DataTableProps) => {
   );
 };
 
-interface DataTableRowProps {
+type DataTableRowBaseProps = {
   children: ReactNode;
   onClick?: () => void;
   className?: string;
-}
+};
 
-export const DataTableRow = ({ children, onClick, className }: DataTableRowProps) => {
+type DataTableRowProps = DataTableRowBaseProps & React.HTMLAttributes<HTMLDivElement>;
+
+export const DataTableRow = ({ children, onClick, className, ...spreadProps }: DataTableRowProps) => {
   return (
     <div
       className={cn('grid gap-2 text-xs py-2 px-2 hover:bg-muted/50 rounded cursor-pointer', className)}
       onClick={onClick}
+      {...spreadProps}
     >
       {children}
     </div>
