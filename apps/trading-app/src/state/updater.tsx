@@ -1,19 +1,21 @@
 'use client';
 
+import { useAtomValue } from 'jotai';
 import { useEffect } from 'react';
 
-import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
+import { allTradingPairsAtom } from './atoms';
+
 import { useExchangeAdapter } from '@/hooks/useExchangeAdapter';
 
 export const Updater = () => {
-  const { data: tradingPairs } = useAllTradingPairs();
+  const { data: pairs } = useAtomValue(allTradingPairsAtom);
   const { adapter } = useExchangeAdapter();
 
   useEffect(() => {
-    if (tradingPairs) {
-      adapter.setupTradingPairs(tradingPairs);
+    if (pairs) {
+      adapter.setupTradingPairs(pairs);
     }
-  }, [tradingPairs, adapter]);
+  }, [pairs, adapter]);
 
   return null;
 };

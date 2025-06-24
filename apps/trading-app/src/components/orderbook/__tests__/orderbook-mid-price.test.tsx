@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
-import { OrderbookMidPrice } from './orderbook-mid-price';
+import { OrderbookMidPrice } from '../orderbook-mid-price';
 
 describe('OrderbookMidPrice', () => {
   it('renders price with no direction', () => {

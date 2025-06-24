@@ -3,12 +3,16 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
 import { useOrderbook, useOrderbookSubscription } from '@/hooks/useOrderbook';
-import { activeTradingPairSymbolAtom, baseActiveTradingPairSymbolAtom, tickSizeAtom } from '@/state/atoms';
+import {
+  activeTradingPairSymbolAtom,
+  allTradingPairsAtom,
+  baseActiveTradingPairSymbolAtom,
+  tickSizeAtom,
+} from '@/state/atoms';
 
 export function TradeUpdater() {
-  const { data: pairs, isLoading } = useAllTradingPairs();
+  const { data: pairs, isLoading } = useAtomValue(allTradingPairsAtom);
   const router = useRouter();
   const { symbol } = useParams();
   const setActiveTradingPair = useSetAtom(activeTradingPairSymbolAtom);
