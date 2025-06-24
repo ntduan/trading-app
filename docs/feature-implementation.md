@@ -208,27 +208,32 @@ K 线数据也通过 WebSocket 推送，但在断线期间可能存在多个周�
 本项目已在前文各章节中实现并说明了大多数技术要求。以下是各项要求的对应说明简要汇总：
 
 - **Tooling**
+
   - 使用最新版本 Next.js (App Router) + React TypeScript。
   - 状态管理使用 Jotai，详见 [ADR-0003]。
   - 严格配置 ESLint + Prettier + typescript-eslint，husky pre-commit 详见 [ADR-0004]。
 
 - **Data Layer**
+
   - 通过 `ExchangeAdapter` 接口封装数据访问，已实现 BinanceAdapter。
   - 订单簿和 PnL 聚合计算已委托给 Web Worker 执行，详见 [3.2](#32-数据处理与计算分离)。
 
 - **Performance**
+
   - 使用 `requestAnimationFrame` 优化高频渲染，详见第 [3.3](#33-UI-层优化与节流)。
   - 已使用 `React.memo` 优化订单薄，详见第 [3.3](#33-UI-层优化与节流)。
   - Lighthouse 检测已验证首屏渲染性能良好。
 
 - **Accessibility & UX**
+
   - 对键盘支持良好，select 支持方向键选择。支持 tab 键切换输入框。
   - 使用 next-themes 控制dark和light theme，当next-themes 的theme设置为 system时候即可自动切换主题，也可以通过header上的切换按钮切换dark和light theme。 详见[ADR-0004]。
   - 页面已经做了响应式处理，手机端访问良好。
 
 - **Testing**
+
   - 使用 Vitest + React Testing Library 编写单元测试，覆盖核心功能。
-  - 编写了一个 Playwright E2E 测试用例，验证下单后订单出现在 PnL 表中，测试文件在 automation/tests/e2e 里面。
+  - 编写了一个 Playwright E2E 测试用例，验证下单后订单出现在 PnL 表中，测试文件在 automation/tests/e2e 里面，并且使用mock 数据规避了币安 API的 CORS 限制。
 
 - **Security**
   - 添加了 CSP meta 标签。
