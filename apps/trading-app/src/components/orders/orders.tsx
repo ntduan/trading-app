@@ -76,8 +76,6 @@ export const Orders = () => {
     [allOrders, enhanceOrders]
   );
 
-  console.log('Orders:', orders);
-
   return (
     <DataTable columns={columns} emptyStateMessage="No orders.">
       {!orders || orders?.length === 0 || !activeTradingPair ? (

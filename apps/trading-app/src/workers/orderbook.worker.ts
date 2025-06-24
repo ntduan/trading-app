@@ -1,4 +1,4 @@
-import { type Side } from '@/adapters/createExchangeAdapter';
+import { type Side } from '@/adapters/types';
 
 export type Level = [string, string]; // [price, amount]
 

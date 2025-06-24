@@ -1,13 +1,8 @@
-import { atom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 
 import { useMemo } from 'react';
 
-import { binance } from '@/adapters/binance';
-import { type IExchangeAdapter } from '@/adapters/createExchangeAdapter';
-
-const binanceAdapterFn = binance();
-
-const exchangeAdapterAtom = atom<IExchangeAdapter>(binanceAdapterFn());
+import { exchangeAdapterAtom } from '@/state/atoms/adapter';
 
 export const useExchangeAdapter = () => {
   const adapter = useAtomValue(exchangeAdapterAtom);
