@@ -3,21 +3,21 @@
 ```mermaid
 graph TD
   subgraph Pages & Layout
-    A1[App Entry\\napp/layout.tsx]
-    A2[Main Page\\napp/page.tsx]
-    A3[Trade Page\\napp/(main)/trade/[symbol]/page.tsx]
+    A1[App Entry<br>app/layout.tsx]
+    A2[Main Page<br>app/page.tsx]
+    A3[Trade Page<br>app/main/trade/symbol/page.tsx]
   end
 
   subgraph Components
-    B1[Common Components\\nsrc/components/]
-    B2[Orderbook Components\\norderbook/]
-    B3[Order Form Components\\nlimit-order/]
+    B1[Common Components<br>src/components/]
+    B2[Orderbook Components<br>orderbook/]
+    B3[Order Form Components<br>limit-order/]
     B4[Header/Theme/Providers]
   end
 
   subgraph State Management
-    C1[Atoms (Jotai)\\nsrc/state/atoms/]
-    C2[Types\\nsrc/state/atoms/types.ts]
+    C1[Atoms Jotai<br>src/state/atoms/]
+    C2[Types<br>src/state/atoms/types.ts]
   end
 
   subgraph Hooks
@@ -29,14 +29,14 @@ graph TD
   end
 
   subgraph Adapters & Data
-    E1[Exchange Adapter\\nsrc/adapters/]
-    E2[Binance Implementation\\nadapters/binance/]
-    E3[Data Feed\\nlib/data-feed.ts]
-    E4[API Endpoints\\napp/api/pairs/]
+    E1[Exchange Adapter<br>src/adapters/]
+    E2[Binance Implementation<br>adapters/binance/]
+    E3[Data Feed<br>lib/data-feed.ts]
+    E4[API Endpoints<br>app/api/pairs/]
   end
 
   subgraph Third-party
-    F1[TradingView Chart\\ntv-charting-library]
+    F1[TradingView Chart<br>tv-charting-library]
     F2[Jotai]
     F3[React Query]
     F4[Next.js]
