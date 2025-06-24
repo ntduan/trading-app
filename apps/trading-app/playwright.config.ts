@@ -23,5 +23,4 @@ export default defineConfig({
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },
-  reporter: [['html', { outputFolder: 'playwright-report', open: 'never' }]],
 });
