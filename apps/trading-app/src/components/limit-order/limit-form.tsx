@@ -48,6 +48,7 @@ export const LimitForm = ({ symbol, side }: LimitFormFormProps) => {
     handleSubmit,
     watch,
     reset,
+    getValues,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -138,7 +139,7 @@ export const LimitForm = ({ symbol, side }: LimitFormFormProps) => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ORDERS] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_BALANCE] });
-      reset({ amount: '' }, { keepValues: true });
+      reset({ ...getValues(), amount: '' });
       console.log('Order submitted successfully:', data);
       enqueueSnackbar('Limit order placed successfully', {
         variant: 'success',

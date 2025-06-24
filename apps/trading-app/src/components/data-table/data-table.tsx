@@ -12,7 +12,7 @@ interface DataTableProps {
 
 export const DataTable = ({ columns, children, className }: DataTableProps) => {
   return (
-    <div className={cn('p-3 select-none', className)}>
+    <div className={cn('p-3 select-none overflow-x-auto', className)}>
       {/* Table header */}
       <div className={cn('grid gap-2 text-xs text-muted-foreground mb-2 px-2', `grid-cols-${columns.length}`)}>
         {columns.map((column, index) => (

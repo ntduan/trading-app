@@ -106,55 +106,57 @@ export const Orders = () => {
   }, [orders, orderbook]);
 
   return (
-    <DataTable columns={columns} emptyStateMessage="No orders.">
-      {!orders || orders?.length === 0 || !activeTradingPair ? (
-        <EmptyState message="You have no orders." />
-      ) : (
-        ordersWithPnl.map((order) => (
-          <DataTableRow key={order.id} className="grid-cols-9">
-            <div className="font-mono text-muted-foreground">{order.id.slice(-7)}</div>
-            <div>{formatDate(order.createdAt)}</div>
-            <div className="font-medium">{order.pair}</div>
-            <div>
-              <span
-                className={cn(
-                  'px-1.5 py-0.5 rounded text-xs font-medium',
-                  order.side === 'buy' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-                )}
-              >
-                {order.side.toUpperCase()}
-              </span>
-            </div>
-            <div className="font-mono">{formatPrice(order.price)}</div>
-            <div className="font-mono">{formatAmount(order.amount)}</div>
-            <div className="font-mono">{order.unrealizedPnl}</div>
-            <div>
-              <span
-                className={cn(
-                  'select-none px-1.5 py-0.5 rounded text-xs font-medium',
-                  order.status === 'filled' && 'bg-green-500/20 text-green-400',
-                  order.status === 'pending' && 'bg-yellow-500/20 text-yellow-400',
-                  order.status === 'cancelled' && 'bg-red-500/20 text-red-400'
-                )}
-              >
-                {order.status}
-              </span>
-            </div>
-            <div>
-              {order.status === 'pending' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="cursor-pointer h-auto px-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                  onClick={(e) => handleCancelOrder(order.id, e)}
+    <div className="overflow-x-auto">
+      <DataTable columns={columns} emptyStateMessage="No orders." className="min-w-[864px]">
+        {!orders || orders?.length === 0 || !activeTradingPair ? (
+          <EmptyState message="You have no orders." />
+        ) : (
+          ordersWithPnl.map((order) => (
+            <DataTableRow key={order.id} className="grid-cols-9">
+              <div className="font-mono text-muted-foreground">{order.id.slice(-7)}</div>
+              <div>{formatDate(order.createdAt)}</div>
+              <div className="font-medium">{order.pair}</div>
+              <div>
+                <span
+                  className={cn(
+                    'px-1.5 py-0.5 rounded text-xs font-medium',
+                    order.side === 'buy' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                  )}
                 >
-                  Cancel
-                </Button>
-              )}
-            </div>
-          </DataTableRow>
-        ))
-      )}
-    </DataTable>
+                  {order.side.toUpperCase()}
+                </span>
+              </div>
+              <div className="font-mono">{formatPrice(order.price)}</div>
+              <div className="font-mono">{formatAmount(order.amount)}</div>
+              <div className="font-mono">{order.unrealizedPnl}</div>
+              <div>
+                <span
+                  className={cn(
+                    'select-none px-1.5 py-0.5 rounded text-xs font-medium',
+                    order.status === 'filled' && 'bg-green-500/20 text-green-400',
+                    order.status === 'pending' && 'bg-yellow-500/20 text-yellow-400',
+                    order.status === 'cancelled' && 'bg-red-500/20 text-red-400'
+                  )}
+                >
+                  {order.status}
+                </span>
+              </div>
+              <div>
+                {order.status === 'pending' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="cursor-pointer h-auto px-2 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    onClick={(e) => handleCancelOrder(order.id, e)}
+                  >
+                    Cancel
+                  </Button>
+                )}
+              </div>
+            </DataTableRow>
+          ))
+        )}
+      </DataTable>
+    </div>
   );
 };

@@ -150,3 +150,19 @@ body[data-scroll-locked] {
   --removed-body-scroll-bar-size: 0px !important;
   padding-right: 0 !important;
 }
+
+.trading-grid {
+  display: grid;
+  gap: 0.25rem; /* gap-1 */
+  grid-template-columns: minmax(253px, 360px) minmax(510px, 1fr);
+  grid-template-rows: minmax(420px, 1fr) minmax(360px, auto);
+  padding-left: 0.25rem; /* px-1 */
+  padding-right: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .trading-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+}

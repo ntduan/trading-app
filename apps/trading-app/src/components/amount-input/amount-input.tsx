@@ -41,7 +41,7 @@ export const AmountInput = ({ label, value, onChange, step = 1, unit = '', maxDe
           if (numVal < 0) return;
           onChange(val);
         }}
-        className="flex-1 bg-transparent px-3 py-2 text-right font-medium text-white outline-none
+        className="flex-1 min-w-0 w-0 bg-transparent px-3 py-2 text-right font-medium text-white outline-none
           appearance-none
           [&::-webkit-inner-spin-button]:appearance-none
           [&::-webkit-outer-spin-button]:appearance-none
@@ -51,10 +51,10 @@ export const AmountInput = ({ label, value, onChange, step = 1, unit = '', maxDe
       <div className="flex items-stretch divide-x divide-border h-10">
         <div className="px-2 flex items-center text-sm font-semibold">{unit}</div>
         <div className="flex flex-col divide-y divide-border">
-          <button type="button" className="px-1 h-1/2 hover:bg-[#1f1f1f]" onClick={() => update(step)}>
+          <button tabIndex={-1} type="button" className="px-1 h-1/2 hover:bg-[#1f1f1f]" onClick={() => update(step)}>
             <ChevronUp className="w-3 h-3" />
           </button>
-          <button type="button" className="px-1 h-1/2 hover:bg-[#1f1f1f]" onClick={() => update(-step)}>
+          <button tabIndex={-1} type="button" className="px-1 h-1/2 hover:bg-[#1f1f1f]" onClick={() => update(-step)}>
             <ChevronDown className="w-3 h-3" />
           </button>
         </div>

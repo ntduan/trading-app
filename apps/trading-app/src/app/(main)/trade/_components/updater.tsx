@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import { useAllTradingPairs } from '@/hooks/useAllTradingPairs';
-import { useOrderbookSubscription } from '@/hooks/useOrderbook';
+import { useOrderbook, useOrderbookSubscription } from '@/hooks/useOrderbook';
 import { activeTradingPairSymbolAtom, baseActiveTradingPairSymbolAtom, tickSizeAtom } from '@/state/atoms';
 
 export function TradeUpdater() {
@@ -14,6 +14,7 @@ export function TradeUpdater() {
   const setActiveTradingPair = useSetAtom(activeTradingPairSymbolAtom);
   const setBaseActiveTradingPair = useSetAtom(baseActiveTradingPairSymbolAtom);
   const tickSize = useAtomValue(tickSizeAtom);
+  const orderbook = useOrderbook();
 
   useEffect(() => {
     if (isLoading || !symbol) {
@@ -28,6 +29,12 @@ export function TradeUpdater() {
       setBaseActiveTradingPair(pair.symbol);
     }
   }, [symbol, pairs, isLoading, router, setActiveTradingPair, setBaseActiveTradingPair]);
+
+  useEffect(() => {
+    if (orderbook?.mid) {
+      document.title = `${orderbook?.mid.toFixed(2)} | ${orderbook?.symbol} | Trading App`;
+    }
+  }, [orderbook]);
 
   useOrderbookSubscription(tickSize);
 

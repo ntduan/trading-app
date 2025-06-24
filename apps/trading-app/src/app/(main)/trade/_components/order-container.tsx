@@ -9,7 +9,6 @@ import { Card } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { activeTradingPairSymbolAtom } from '@/state/atoms';
-
 export const OrderContainer = () => {
   const [activeTab, setActiveTab] = useState('Spot');
   const [loadedTabs, setLoadedTabs] = useState(new Set(['Spot']));
