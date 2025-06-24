@@ -1,5 +1,15 @@
 ![Vercel Deploy](https://deploy-badge.vercel.app/vercel/trading-gammac)
 
+## Docs
+
+- [ADR-0001-monorepo-architecture](docs/ADR-0001-monorepo-architecture.md)
+- [ADR-0002-code-quality-tooling](docs/ADR-0002-code-quality-tooling.md)
+- [ADR-0003-state-layer](docs/ADR-0003-state-layer.md)
+- [DR-0004-styling](docs/ADR-0004-styling.md)
+- [feature-implementation](docs/feature-implementation.md)
+
+---
+
 ## Architecture Diagram
 
 ```mermaid
