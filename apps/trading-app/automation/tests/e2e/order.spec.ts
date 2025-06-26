@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 import mockDepth from '../mock/depth'; 
 
 test.beforeEach(async ({ page }) => {
-  await page.route('https://api.binance.com/api/v3/depth?**', async route => {
+  await page.route('https://api.binance.us/api/v3/depth?**', async route => {
     route.fulfill({
       status: 200,
       contentType: 'application/json',

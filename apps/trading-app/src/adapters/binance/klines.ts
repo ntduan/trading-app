@@ -22,7 +22,7 @@ export const resolutionToBinanceInterval = (res: string) => {
 export function subscribeKlines(symbol: string, resolution: string, onRealtimeCallback: (bar: Bar) => void) {
   const interval = resolutionToBinanceInterval(resolution);
   const symbolStr = symbol.replace('/', '').toLowerCase();
-  const ws = new ManagedWebSocket(`wss://stream.binance.com:9443/ws/${symbolStr}@kline_${interval}`);
+  const ws = new ManagedWebSocket(`wss://websocket-proxy.fly.dev/?stream=${symbolStr}@kline_${interval}`);
 
   let isConnected = false;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,7 +82,7 @@ export function subscribeKlines(symbol: string, resolution: string, onRealtimeCa
 export async function getHistory(symbol: string, resolution: string, from: number, to: number): Promise<Bar[]> {
   const interval = resolutionToBinanceInterval(resolution);
   const limit = 1000;
-  const url = `https://api.binance.com/api/v3/klines?symbol=${symbol.replace('/', '')}&interval=${interval}&startTime=${from * 1000}&endTime=${to * 1000}&limit=${limit}`;
+  const url = `https://websocket-proxy.fly.dev/api/v3/klines?symbol=${symbol.replace('/', '')}&interval=${interval}&startTime=${from * 1000}&endTime=${to * 1000}&limit=${limit}`;
   const res = await fetch(url);
   const data = await res.json();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

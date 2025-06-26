@@ -11,7 +11,7 @@ export function applyDelta(book: Orderbook, updates: [string, string][]) {
 }
 
 export async function fetchSnapshot(symbol: string): Promise<Snapshot> {
-  const res = await fetch(`https://api.binance.com/api/v3/depth?symbol=${symbol.toUpperCase()}&limit=1000`);
+  const res = await fetch(`https://websocket-proxy.fly.dev/api/v3/depth?symbol=${symbol.toUpperCase()}&limit=1000`);
   return res.json();
 }
 
@@ -22,7 +22,7 @@ export function subscribeOrderbook(symbol: string, onRealtimeCallback: (bids: Ra
   let snapshotLoaded = false;
   const buffer: DepthUpdateEvent[] = [];
 
-  const ws = new ManagedWebSocket(`wss://stream.binance.com:9443/ws/${symbol.toLowerCase()}@depth@1000ms`);
+  const ws = new ManagedWebSocket(`wss://websocket-proxy.fly.dev/?stream=${symbol.toLowerCase()}@depth@1000ms`);
 
   // Resync logic: fetch snapshot and replay buffer
   async function resync() {
